@@ -336,8 +336,12 @@ PrefabInstance:
       value: BroomBroom4
       objectReference: {fileID: 0}
     - target: {fileID: 2382799219754379413, guid: 0177ea7b762ea964496fc73b9c168ae3, type: 3}
+      propertyPath: m_Type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382799219754379413, guid: 0177ea7b762ea964496fc73b9c168ae3, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0177ea7b762ea964496fc73b9c168ae3, type: 3}
@@ -397,8 +401,12 @@ PrefabInstance:
       value: BroomBroom3
       objectReference: {fileID: 0}
     - target: {fileID: 2382799219754379413, guid: 03412d1ffd8fd644dbb2d85acfef5cda, type: 3}
+      propertyPath: m_Type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2382799219754379413, guid: 03412d1ffd8fd644dbb2d85acfef5cda, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03412d1ffd8fd644dbb2d85acfef5cda, type: 3}

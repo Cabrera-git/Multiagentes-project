@@ -3,7 +3,22 @@ guid: 03412d1ffd8fd644dbb2d85acfef5cda
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Chas
+    second: {fileID: 2100000, guid: 2a34574db89117a49b93e0b0107789df, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Glow
+    second: {fileID: 2100000, guid: 89a5499d5e482c245942605394e61e99, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: WindowTint
+    second: {fileID: 2100000, guid: 9870d6f0cdd2d984fb4234fe3faa2f37, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

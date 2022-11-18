@@ -3,7 +3,12 @@ guid: 8c55993a5e6ac4348872002213df6bd8
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: WindowTint
+    second: {fileID: 2100000, guid: aa9f3a364e3985e4bacf45d1eb95cad2, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
