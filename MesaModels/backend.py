@@ -5,7 +5,9 @@ import os
 import json
 from flask.json import jsonify
 import uuid
-from server import Car, City, TrafficLight
+from agents.car import Car
+from agents.city import City
+from agents.trafficLight import TrafficLight
 
 games = {}
 

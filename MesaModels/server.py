@@ -1,9 +1,9 @@
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.modules import CanvasGrid
-from .agents.car import Car
-from .agents.trafficLight import TrafficLight
-from .agents.city import City
-from .agents.cityObjects import Grass, Street
+from agents.car import Car
+from agents.trafficLight import TrafficLight
+from agents.city import City
+from agents.cityObjects import Grass, Street
 
 def agent_portrayal(agent):
     if type(agent) is Car:

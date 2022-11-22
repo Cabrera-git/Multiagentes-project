@@ -1,8 +1,9 @@
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid as Grid
-from .trafficLight import TrafficLight
-
+from agents.trafficLight import TrafficLight
+from agents.car import Car
+from agents.cityObjects import Grass
 
 class City(Model):
     def __init__(self, nCoches=15):
@@ -59,7 +60,7 @@ class City(Model):
 
         for _, x, y in self.grid.coord_iter():
             if self.matrix[y][x] == 0:
-                block = Pasto(self, (x, y))
+                block = Grass(self, (x, y))
                 self.grid.place_agent(block, block.pos)
 
     def siguienteTurnoSemaforo(self):

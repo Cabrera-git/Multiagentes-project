@@ -1,7 +1,7 @@
 from mesa import Agent
 import random 
-from .trafficLight import TrafficLight
-from ..vars import *
+from trafficLight import TrafficLight
+from vars_ import *
 
 class Car(Agent):
     def __init__(self, model, pos):
