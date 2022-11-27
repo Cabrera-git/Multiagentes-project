@@ -1,6 +1,6 @@
 from mesa import Agent
 import random 
-from trafficLight import TrafficLight
+from .trafficLight import TrafficLight
 from vars_ import *
 
 class Car(Agent):
@@ -12,6 +12,7 @@ class Car(Agent):
         self.orientacion = None  # 1 arriba, 2 abajo, 3 derecha, 4 izquierda
          
     def step(self):
+        print("Carro en: ", self.pos)
         tipoCasilla = self.model.matrix[INDEXMAT[self.pos[1]]][self.pos[0]]
         next_move = self.getNextStep(tipoCasilla)
         next_move = self.orientationChange(next_move)
