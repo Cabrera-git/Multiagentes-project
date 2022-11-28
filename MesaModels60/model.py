@@ -20,7 +20,7 @@ class City(Model):
         destinations = []
         maze = []
 
-        with open('/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModels60/base.txt') as baseFile: # Change Path
+        with open('/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModels60/base2.txt') as baseFile: # Change Path
             lines = baseFile.readlines()
             self.width = len(lines[0])-1
             self.height = len(lines)

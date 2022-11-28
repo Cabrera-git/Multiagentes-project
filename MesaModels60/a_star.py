@@ -127,11 +127,12 @@ class AStar:
                     d) else move the child to yet_to_visit list
         """
         #find maze has got how many rows and columns 
-        no_rows, no_columns = np.shape(self.maze)
+        no_rows, no_columns = [len(self.maze), len(self.maze[0])]
         
         # Loop until you find the end
         
         while len(yet_to_visit_list) > 0:
+            print("working")
             
             # Every time any node is referred from yet_to_visit list, counter of limit operation incremented
             outer_iterations += 1     

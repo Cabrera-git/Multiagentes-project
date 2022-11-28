@@ -43,12 +43,12 @@ def agent_portrayal(agent):
 width = 0
 height = 0
 
-with open('/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModels60/base.txt') as baseFile: #change path
+with open('/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModels60/base2.txt') as baseFile: #change path
     lines = baseFile.readlines()
     width = len(lines[0])-1
     height = len(lines)
 
-model_params = {"N":100}
+model_params = {"N":10}
 
 grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
 
