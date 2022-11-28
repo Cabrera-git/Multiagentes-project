@@ -43,7 +43,7 @@ def agent_portrayal(agent):
 width = 0
 height = 0
 
-with open('/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModel3/base.txt') as baseFile: #change path
+with open('/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModels60/base.txt') as baseFile: #change path
     lines = baseFile.readlines()
     width = len(lines[0])-1
     height = len(lines)

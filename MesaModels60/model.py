@@ -15,12 +15,12 @@ class City(Model):
     """
     def __init__(self, N):
 
-        dataDictionary = json.load(open("/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModel3/mapDictionary.txt")) # Change Path
+        dataDictionary = json.load(open("/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModels60/mapDictionary.txt")) # Change Path
 
         destinations = []
         maze = []
 
-        with open('/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModel3/base.txt') as baseFile: # Change Path
+        with open('/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModels60/base.txt') as baseFile: # Change Path
             lines = baseFile.readlines()
             self.width = len(lines[0])-1
             self.height = len(lines)
