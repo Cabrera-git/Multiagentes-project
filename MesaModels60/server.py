@@ -48,7 +48,7 @@ with open('/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaMod
     width = len(lines[0])-1
     height = len(lines)
 
-model_params = {"N":10}
+model_params = {"N":1}
 
 grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
 

@@ -137,7 +137,6 @@ class AStar:
             # Every time any node is referred from yet_to_visit list, counter of limit operation incremented
             outer_iterations += 1     
 
-            
             # Get the current node
             current_node = yet_to_visit_list[0]
             current_index = 0
