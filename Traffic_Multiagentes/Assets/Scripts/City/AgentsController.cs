@@ -39,7 +39,7 @@ public class AgentController : MonoBehaviour
     string getObstaclesEndpoint = "/";
     string sendConfigEndpoint = "/init";
     string updateEndpoint = "/update";
-    AgentsData agentsData, obstacleData, boxData, dropData;
+    AgentsData obstacleData;
 
     Dictionary<string, GameObject> agents;
     Dictionary<string, Vector3> prevPositions, currPositions;
@@ -56,10 +56,7 @@ public class AgentController : MonoBehaviour
 
     void Start()
     {
-        agentsData = new AgentsData();
         obstacleData = new AgentsData();
-        dropData = new AgentsData();
-        boxData = new AgentsData();
        
 
         prevPositions = new Dictionary<string, Vector3>();
