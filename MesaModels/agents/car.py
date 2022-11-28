@@ -1,6 +1,6 @@
 from mesa import Agent
 import random 
-from trafficLight import TrafficLight
+from .trafficLight import TrafficLight
 from vars_ import *
 
 class Car(Agent):

@@ -1,8 +1,6 @@
 from cloudant import Cloudant
 from flask import Flask, render_template, request, jsonify
-import atexit
 import os
-import json
 from flask.json import jsonify
 import uuid
 from agents.car import Car
