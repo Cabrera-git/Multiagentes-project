@@ -18,7 +18,7 @@ class City(Model):
         self.tiempoAmarillo = 2
 
         self.numCoches = nCoches
-        self.numLights = 4
+        self.numLights = 8
 
         # 1 - solo arriba
         # 2 - solo abajo
