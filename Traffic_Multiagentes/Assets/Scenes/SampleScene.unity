@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.09609347, g: 0.09386689, b: 0.10650429, a: 1}
+  m_IndirectSpecularColor: {r: 0.096093506, g: 0.09386691, b: 0.10650439, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -648,19 +648,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 505ced1226d986d48a53c8a907948fa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentPrefab: {fileID: 0}
-  obstaclePrefab: {fileID: 0}
-  boxPrefab: {fileID: 0}
-  floor: {fileID: 0}
-  daddy: {fileID: 0}
-  NAgents: 0
-  width: 0
-  height: 0
-  boxes: 0
-  executionSteps: 0
-  timeToUpdate: 5
-  all_boxes: []
-  boxes_ids: []
+  carPrefab: {fileID: 0}
+  lightPrefab: {fileID: 0}
+  cityObject: {fileID: 1740409299}
+  street_straight: {fileID: 1573730805894322, guid: 2224b63330275e5478ef024b2913f937, type: 3}
+  street_empty: {fileID: 1256093442512822, guid: 0509744eed6f16e4c98e542f790a84b5, type: 3}
+  street_leftturn: {fileID: 1528973284185392, guid: d9d6037adf22fd1488b7deceb439e078, type: 3}
+  street_rightturn: {fileID: 1116869472028106, guid: 8e333c3d9aca5ec419b24e89d083d1e0, type: 3}
+  building_normal: {fileID: 1212380520111254, guid: 562df8355904213468a690c4ce6740b6, type: 3}
+  building_destination: {fileID: 1378370071209536, guid: a60988b24f8ff094ba511054edf48a9d, type: 3}
+  cars: 0
+  time: 0
 --- !u!4 &1241222917
 Transform:
   m_ObjectHideFlags: 0
@@ -790,6 +788,37 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 562df8355904213468a690c4ce6740b6, type: 3}
+--- !u!1 &1740409299
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1740409300}
+  m_Layer: 0
+  m_Name: City
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1740409300
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1740409299}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1831533275
 PrefabInstance:
   m_ObjectHideFlags: 0
