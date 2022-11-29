@@ -44,7 +44,7 @@ width = 0
 height = 0
 #actual path:
 #path = "./base2.txt"
-with open('./base.txt') as baseFile: #change path
+with open('./base.txt',encoding='utf8') as baseFile: #change path
     lines = baseFile.readlines()
     width = len(lines[0])-1
     height = len(lines)
