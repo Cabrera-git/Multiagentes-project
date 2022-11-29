@@ -13,13 +13,16 @@ public class CarData
 {
     public string id;
     public float x, z;
-    public int o;
-    public CarData(string id, float x, float z, int o)
+    public int directionLight;
+    public bool isParked, arrived;
+    public CarData(string id, float x, float z, int directionLight, bool isParked, bool arrived)
     {
         this.id = id;
         this.x = x;
         this.z = z;
-        this.o = o;
+        this.directionLight = directionLight;
+        this.isParked = isParked;
+        this.arrived = arrived;
     }
 }
 
@@ -35,15 +38,15 @@ public class CarsData
 [Serializable]
 public class LightData
 {
-    public string id;
     public float x, z;
-    public int state;
-    public LightData(string id, float x, float z, int state)
+    public string state;
+    public int direction;
+    public LightData(float x, float z, string state, int direction)
     {
-        this.id = id;
         this.x = x;
         this.z = z;
         this.state = state;
+        this.direction = direction;
     }
 }
 
@@ -71,6 +74,7 @@ public class AgentController : MonoBehaviour
     string getAgentsEndpoint = "/cars";
     string getCityEndpoint = "/city";
     string sendConfigEndpoint = "/init";
+    string sendUpdateEndpoint = "/update";
 
     Dictionary<string, GameObject> agents;
     
@@ -81,11 +85,12 @@ public class AgentController : MonoBehaviour
     LightsData lightsData;
     City city;
 
-    public GameObject carPrefab, lightPrefab, cityObject,
+    public GameObject carPrefab, lightPrefab,
             street_straight, street_empty, 
             street_leftturn, street_rightturn,
             building_normal, building_destination,
-            lightpost_left, lightpost_right;
+            lightpost_left, lightpost_right,
+            carsObject, cityObject, lightObject;
     public int cars, time;
 
     void Start()
@@ -96,6 +101,7 @@ public class AgentController : MonoBehaviour
         city = new City();
         matrix = new List<List<char>>();
 
+        Debug.Log("Getting City layout");
         CityGen();
 
         StartCoroutine(SendConfiguration());
@@ -103,7 +109,7 @@ public class AgentController : MonoBehaviour
 
     private void Update()
     {
-
+        StartCoroutine(UpdateSimulation());
     }
 
     private void CityGen()
@@ -133,6 +139,7 @@ public class AgentController : MonoBehaviour
                     street.transform.parent = cityObject.transform;
 
                     GameObject light = Instantiate(lightpost_left, new Vector3(i, 1.5f, j), Quaternion.Euler(new Vector3(180, 0, 0)));
+                    light.transform.parent = lightObject.transform;
                 }
                 else if (matrix[i][j] == '⋝' || matrix[i][j] == '≤' || matrix[i][j] == '≥' || matrix[i][j] == '⋜')
                 {
@@ -188,21 +195,9 @@ public class AgentController : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Welp");
+                    Debug.Log("Unknown character");
                 }
             }
-        }
-    }
-
-    IEnumerator UpdateSimulation()
-    {
-        UnityWebRequest www = UnityWebRequest.Get(serverUrl + getAgentsEndpoint);
-        yield return www.SendWebRequest();
-        if (www.result != UnityWebRequest.Result.Success)
-            Debug.Log(www.error);
-        else
-        {
-            StartCoroutine(GetAgentsData());
         }
     }
 
@@ -226,7 +221,18 @@ public class AgentController : MonoBehaviour
             Debug.Log("Started city model!");
             Debug.Log("Getting Agents positions");
             StartCoroutine(GetAgentsData());
-            Debug.Log("Getting City layout");
+        }
+    }
+
+    IEnumerator UpdateSimulation()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(serverUrl + getUpdateEndpoint);
+        yield return www.SendWebRequest();
+        if (www.result != UnityWebRequest.Result.Success)
+            Debug.Log(www.error);
+        else
+        {
+            StartCoroutine(GetAgentsData());
         }
     }
 
@@ -240,22 +246,25 @@ public class AgentController : MonoBehaviour
         else
         {
             carsData = JsonUtility.FromJson<CarsData>(www.downloadHandler.text);
-            GenerateCars(carsData);
+            GenerateCars();
         }
     }
     
-    void GenerateCars(CarsData cData)
+    void GenerateCars()
     {
-        for (int i = 0; i < cData.cars.Count(); i++)
-        {
-          
-            if (!agents.ContainsKey(cData.cars[i].id))
+        for (int i = 0; i < carsData.cars.Count(); i++)
+        {          
+            if (!agents.ContainsKey(carsData.cars[i].id))
             {
-                GameObject cars = new GameObject();
                 GameObject car = Instantiate(carModels[UnityEngine.Random.Range(0, 4)], new Vector3(cData.cars[i].x, 0, cData.cars[i].z), Quaternion.identity);
-                agents.Add(cData.cars[i].id, car);
-                car.transform.parent = cars.transform;
+                agents.Add(carsData.cars[i].id, car);
+                car.transform.parent = carsObject.transform;
                 car.tag = "Car";
+            }
+            if (carsData.cars[i].arrived)
+            {
+                Destroy(agents[carsData.cars[i].id]);
+                agents.Remove(carsData.cars[i].id);
             }
         }
     }
