@@ -148,6 +148,8 @@ public class AgentController : MonoBehaviour
                 }
                 else if (matrix[i][j] == '#')
                 {
+                    Random rand
+                    int 
                     GameObject building = Instantiate(building_normal, new Vector3(i, 0, j), Quaternion.identity);
                     building.transform.parent = cityObject.transform;
                 }
