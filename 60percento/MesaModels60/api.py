@@ -32,8 +32,9 @@ def cars():
             return jsonify({"error": "Model is not initialized. Initialize and try again"})
         carsData = [
             {
+                "id": agent.unique_id,
                 "x": agent.pos[0], 
-                "y": agent.pos[1], 
+                "z": agent.pos[1], 
                 "directionLight": agent.directionLight, 
                 "isParked": agent.is_parked, 
 

@@ -330,6 +330,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 505ced1226d986d48a53c8a907948fa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  carModels:
+  - {fileID: 919132149155446097, guid: 566cb75264efa2240a8ac3b88a5eab33, type: 3}
+  - {fileID: 919132149155446097, guid: 284f4c662b4d45c4683227a6c2236851, type: 3}
+  - {fileID: 919132149155446097, guid: d932af3db65a7524bab94d94a34512d0, type: 3}
+  - {fileID: 919132149155446097, guid: 803bc23981b4c6745ba5cdf2005ebf49, type: 3}
   carPrefab: {fileID: 0}
   lightPrefab: {fileID: 0}
   cityObject: {fileID: 2054035769}
@@ -341,8 +346,8 @@ MonoBehaviour:
   building_destination: {fileID: 1378370071209536, guid: a60988b24f8ff094ba511054edf48a9d, type: 3}
   lightpost_left: {fileID: 1751516578131854, guid: 334aad2b5d3ce18449f0aac7e90fe56e, type: 3}
   lightpost_right: {fileID: 1187787657081942, guid: d7cdfd713e1c02c49b7eb072ff0c50b2, type: 3}
-  cars: 0
-  time: 0
+  cars: 10
+  time: 10
 --- !u!4 &1534266360
 Transform:
   m_ObjectHideFlags: 0

@@ -67,12 +67,14 @@ public class City
 
 public class AgentController : MonoBehaviour
 {
-    string serverUrl = "http://localhost:8521";
-    string getAgentsEndpoint = "/games";
+    string serverUrl = "http://localhost:8585";
+    string getAgentsEndpoint = "/cars";
     string getCityEndpoint = "/city";
     string sendConfigEndpoint = "/init";
 
     Dictionary<string, GameObject> agents;
+    
+    public List<GameObject> carModels;
     List<List<char>> matrix;
 
     CarsData carsData;
@@ -211,7 +213,7 @@ public class AgentController : MonoBehaviour
         form.AddField("cars", cars.ToString());
         form.AddField("timeLimit", time.ToString());
 
-        UnityWebRequest www = UnityWebRequest.Get(serverUrl + sendConfigEndpoint);
+        UnityWebRequest www = UnityWebRequest.Post(serverUrl + sendConfigEndpoint,form);
         www.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
         yield return www.SendWebRequest();
@@ -238,7 +240,23 @@ public class AgentController : MonoBehaviour
         else
         {
             carsData = JsonUtility.FromJson<CarsData>(www.downloadHandler.text);
-            lightsData = JsonUtility.FromJson<LightsData>(www.downloadHandler.text);
+            GenerateCars(carsData);
+        }
+    }
+    
+    void GenerateCars(CarsData cData)
+    {
+        for (int i = 0; i < cData.cars.Count(); i++)
+        {
+          
+            if (!agents.ContainsKey(cData.cars[i].id))
+            {
+                GameObject cars = new GameObject();
+                GameObject car = Instantiate(carModels[UnityEngine.Random.Range(0, 4)], new Vector3(cData.cars[i].x, 0, cData.cars[i].z), Quaternion.identity);
+                agents.Add(cData.cars[i].id, car);
+                car.transform.parent = cars.transform;
+                car.tag = "Car";
+            }
         }
     }
 }
