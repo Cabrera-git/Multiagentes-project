@@ -46,7 +46,7 @@ height = 0
 
 basePath = Path("layouts/base2.txt")
 
-with open(basePath) as baseFile: #change path
+with open(basePath) as baseFile: 
     lines = baseFile.readlines()
     width = len(lines[0])-1
     height = len(lines)
