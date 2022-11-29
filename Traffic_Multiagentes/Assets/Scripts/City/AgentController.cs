@@ -143,14 +143,13 @@ public class AgentController : MonoBehaviour
                 }
                 else if (matrix[i][j] == 'D')
                 {
-                    GameObject building = Instantiate(building_destination, new Vector3(i, 0, j), Quaternion.identity);
+                    GameObject building = Instantiate(building_destination, new Vector3(i+.07f, 0, j+ .47f), Quaternion.identity);
                     building.transform.parent = cityObject.transform;
                 }
                 else if (matrix[i][j] == '#')
                 {
-                    Random rand
-                    int 
-                    GameObject building = Instantiate(building_normal, new Vector3(i, 0, j), Quaternion.identity);
+
+                    GameObject building = Instantiate(building_normal, new Vector3(i-0.48f, 0, j+0.22f), Quaternion.identity);
                     building.transform.parent = cityObject.transform;
                 }
                 else
