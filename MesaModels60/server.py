@@ -1,7 +1,8 @@
 from agent import *
 from model import City
-from mesa.visualization.modules import CanvasGrid, BarChartModule
+from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
+from pathlib import Path
 
 def agent_portrayal(agent):
     if agent is None: return
@@ -43,7 +44,9 @@ def agent_portrayal(agent):
 width = 0
 height = 0
 
-with open('/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModels60/base2.txt') as baseFile: #change path
+basePath = Path("base2.txt")
+
+with open(basePath) as baseFile: #change path
     lines = baseFile.readlines()
     width = len(lines[0])-1
     height = len(lines)
