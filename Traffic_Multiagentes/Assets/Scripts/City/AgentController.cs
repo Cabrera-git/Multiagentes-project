@@ -108,10 +108,8 @@ public class AgentController : MonoBehaviour
     {
         foreach (string line in System.IO.File.ReadLines(@"./../MesaModels60/base.txt"))
         {  
-            Debug.Log(line);
             List<char> lst = new List<char>();
-            lst = line.ToCharArray().ToList();           
-            
+            lst = line.ToCharArray().ToList();                       
             matrix.Add(lst);
         }
         for (int i = 0; i < matrix.Count; i++)
@@ -132,21 +130,46 @@ public class AgentController : MonoBehaviour
                     GameObject street = Instantiate(street_empty, new Vector3(i, 0, j), Quaternion.identity);
                     street.transform.parent = cityObject.transform;
 
-                    GameObject light = Instantiate(lightpost_left, new Vector3(i-0.5f, 0, j-0.5f), Quaternion.identity);
+                    GameObject light = Instantiate(lightpost_left, new Vector3(i, 1.5f, j), Quaternion.Euler(new Vector3(180, 0, 0)));
                 }
                 else if (matrix[i][j] == '⋝' || matrix[i][j] == '≤' || matrix[i][j] == '≥' || matrix[i][j] == '⋜')
                 {
-                    if(x == matrix.Count - 1)
-                    {
-                        
-                    }
+                    GameObject street;
 
-                    /*GameObject street = Instantiate(street_empty, new Vector3(i, 0, j), Quaternion.identity);
-                    street.transform.parent = cityObject.transform;*/
+                    if(i == 0 || i == 1 || i == 24 || i == 25)
+                    {
+                        if(j != 1 || j != 24)
+                        {
+                            street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.Euler(new Vector3(0, -90, 0)));
+                            street.transform.parent = cityObject.transform;
+                        }
+                        else
+                        {
+                            street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.identity);
+                            street.transform.parent = cityObject.transform;
+                        }
+                    }
+                    else if(j == 0 || j == 1 || j == 24 || j == 25)
+                    {
+                        if(i != 1 || i != 24)
+                        {
+                            street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.identity);
+                            street.transform.parent = cityObject.transform;
+                        }
+                        else
+                        {
+                            street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.Euler(new Vector3(0, -90, 0)));
+                            street.transform.parent = cityObject.transform;
+                        }
+                    }
+                    else
+                    {
+                        street = Instantiate(street_empty, new Vector3(i, 0, j), Quaternion.identity);
+                        street.transform.parent = cityObject.transform;
+                    }
                 }
                 else if (matrix[i][j] == 'D')
-                {
-                    
+                {                    
                     float h = UnityEngine.Random.Range(1.0f,2.0f);
                     GameObject building = Instantiate(building_destination, new Vector3(i+.07f, 0, j+ .47f), Quaternion.identity);
                     Vector3 scaling = new Vector3(1,h,1);
@@ -154,9 +177,7 @@ public class AgentController : MonoBehaviour
                     building.transform.parent = cityObject.transform;
                 }
                 else if (matrix[i][j] == '#')
-                {
-
-                    
+                {                    
                     float h = UnityEngine.Random.Range(1.0f,2.0f);
                     GameObject building = Instantiate(building_normal, new Vector3(i-0.48f, 0, j+0.22f), Quaternion.identity);
                     Vector3 scaling = new Vector3(1,h,1);

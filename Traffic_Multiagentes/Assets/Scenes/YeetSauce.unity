@@ -339,6 +339,8 @@ MonoBehaviour:
   street_rightturn: {fileID: 1116869472028106, guid: 8e333c3d9aca5ec419b24e89d083d1e0, type: 3}
   building_normal: {fileID: 1212380520111254, guid: 562df8355904213468a690c4ce6740b6, type: 3}
   building_destination: {fileID: 1378370071209536, guid: a60988b24f8ff094ba511054edf48a9d, type: 3}
+  lightpost_left: {fileID: 1751516578131854, guid: 334aad2b5d3ce18449f0aac7e90fe56e, type: 3}
+  lightpost_right: {fileID: 1187787657081942, guid: d7cdfd713e1c02c49b7eb072ff0c50b2, type: 3}
   cars: 0
   time: 0
 --- !u!4 &1534266360
