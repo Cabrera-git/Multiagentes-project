@@ -62,12 +62,5 @@ def update():
         currentStep += 1
         return str(city.running)
 
-# Obtener estadísticas finales
-@app.route('/finalstats', methods = ['GET'])
-def finalStats():
-    global city
-    if request.method == 'GET':
-        return "Hola aqui aun faltan las estadísticas."
-
 if __name__ == "__main__":
     app.run(host="localhost", port=PORT, debug=True)
