@@ -4,7 +4,6 @@ from mesa.space import MultiGrid
 from agent import *
 from a_star import AStar
 import json
-import random
 
 class City(Model):
     """ 
@@ -15,7 +14,7 @@ class City(Model):
     """
     def __init__(self, N):
 
-        dataDictionary = json.load(open("/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModels60/mapDictionary.txt")) # Change Path
+        dataDictionary = json.load(open("/Users/dhnam/Desktop/School/5th Semester/Multiagentes-project/MesaModels60/mapDictionary.json")) # Change Path
 
         destinations = []
         maze = []

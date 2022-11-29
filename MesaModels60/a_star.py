@@ -3,8 +3,6 @@ Original code by Baijayanta Roy
 https://github.com/BaijayantaRoy/Medium-Article/blob/master/A_Star.ipynb
 """
 
-import numpy as np
-
 class Node:
     """
         A node class for A* Pathfinding
