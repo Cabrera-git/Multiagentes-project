@@ -106,7 +106,7 @@ public class AgentController : MonoBehaviour
 
     private void CityGen()
     {
-        foreach (string line in System.IO.File.ReadLines(@"./../MesaModels60/base.txt"))
+        foreach (string line in System.IO.File.ReadLines(@"./../MesaModels60/layouts/base.txt"))
         {  
             List<char> lst = new List<char>();
             lst = line.ToCharArray().ToList();                       
