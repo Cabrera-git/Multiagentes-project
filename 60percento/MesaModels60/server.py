@@ -49,7 +49,7 @@ with open('./base.txt',encoding='utf8') as baseFile: #change path
     width = len(lines[0])-1
     height = len(lines)
 
-model_params = {"N":1}
+model_params = {"N":4}
 
 grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
 
