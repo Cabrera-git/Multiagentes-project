@@ -2,6 +2,7 @@
 Original code by Baijayanta Roy
 https://github.com/BaijayantaRoy/Medium-Article/blob/master/A_Star.ipynb
 """
+import numpy as np
 
 class Node:
     """
@@ -49,8 +50,8 @@ class AStar:
             path.append((adjust_x, adjust_y))
             current = current.parent
         # Return reversed path as we need to show from start to end path
-        path = path[::-1]
-        return path
+
+        return path[::-1]
 
 
     def search(self, cost, start, end):
@@ -125,13 +126,12 @@ class AStar:
                     d) else move the child to yet_to_visit list
         """
         #find maze has got how many rows and columns 
-        no_rows, no_columns = [len(self.maze), len(self.maze[0])]
+        no_rows, no_columns = np.shape(np.array(self.maze))
         
         # Loop until you find the end
         
         while len(yet_to_visit_list) > 0:
-            print("working")
-            
+
             # Every time any node is referred from yet_to_visit list, counter of limit operation incremented
             outer_iterations += 1     
 

@@ -36,8 +36,11 @@ class Car(Agent):
         self.directionLight = (0, 0)
         self.curr_index = 1
         self.route = route
-        self.intention = self.route[1]
-    
+        try: 
+            self.intention = self.route[1]
+        except:
+            print(self.route)
+
     def assignDirection(self):
         """
         Initialise agent's old direction from model

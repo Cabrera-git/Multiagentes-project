@@ -66,10 +66,16 @@ class City(Model):
             
             fate = self.random.choice(destinations)
             route = a_star.search(1, (x,y), fate)
+            if route == None:
+                print("No route found")
+                continue
+
             agent = Car(f"c{i}", self, fate, route)
             self.grid.place_agent(agent, (x,y))
             self.schedule.add(agent)
             agent.assignDirection()
+            print(f"Car {i} assigned to {fate}")
+           
 
         self.running = True 
 
