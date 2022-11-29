@@ -143,14 +143,18 @@ public class AgentController : MonoBehaviour
                 }
                 else if (matrix[i][j] == 'D')
                 {
+                    float h = UnityEngine.Random.Range(1.0f,2.0f);
                     GameObject building = Instantiate(building_destination, new Vector3(i, 0, j), Quaternion.identity);
+                    Vector3 scaling = new Vector3(1,h,1);
+                    building.transform.localScale = Vector3.Scale(building.transform.localScale, scaling);
                     building.transform.parent = cityObject.transform;
                 }
                 else if (matrix[i][j] == '#')
                 {
-                    Random rand
-                    int 
+                    float h = UnityEngine.Random.Range(1.0f,2.0f);
                     GameObject building = Instantiate(building_normal, new Vector3(i, 0, j), Quaternion.identity);
+                    Vector3 scaling = new Vector3(1,h,1);
+                    building.transform.localScale = Vector3.Scale(building.transform.localScale, scaling);
                     building.transform.parent = cityObject.transform;
                 }
                 else
