@@ -16,12 +16,12 @@ class City(Model):
     """
     def __init__(self, N):
 
-        dataDictionary = json.load(open(Path("mapDictionary.json"))) # Change Path
+        dataDictionary = json.load(open(Path("layouts/mapDictionary.json"))) # Change Path
 
         destinations = []
         maze = []
 
-        basePath = Path("base2.txt")
+        basePath = Path("layouts/base2.txt")
 
         with open(basePath) as baseFile: # Change Path
             lines = baseFile.readlines()
