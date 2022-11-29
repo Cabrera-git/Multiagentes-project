@@ -82,7 +82,8 @@ public class AgentController : MonoBehaviour
     public GameObject carPrefab, lightPrefab, cityObject,
             street_straight, street_empty, 
             street_leftturn, street_rightturn,
-            building_normal, building_destination;
+            building_normal, building_destination,
+            lightpost_left, lightpost_right;
     public int cars, time;
 
     void Start()
@@ -130,26 +131,36 @@ public class AgentController : MonoBehaviour
                 {
                     GameObject street = Instantiate(street_empty, new Vector3(i, 0, j), Quaternion.identity);
                     street.transform.parent = cityObject.transform;
+
+                    GameObject light = Instantiate(lightpost_left, new Vector3(i-0.5f, 0, j-0.5f), Quaternion.identity);
                 }
-                else if (matrix[i][j] == '⋝' || matrix[i][j] == '≤')
+                else if (matrix[i][j] == '⋝' || matrix[i][j] == '≤' || matrix[i][j] == '≥' || matrix[i][j] == '⋜')
                 {
-                    GameObject street = Instantiate(street_leftturn, new Vector3(i, 0, j), Quaternion.identity);
-                    street.transform.parent = cityObject.transform;
-                }
-                else if (matrix[i][j] == '≥' || matrix[i][j] == '⋜')
-                {
-                    GameObject street = Instantiate(street_rightturn, new Vector3(i, 0, j), Quaternion.identity);
-                    street.transform.parent = cityObject.transform;
+                    if(x == matrix.Count - 1)
+                    {
+                        
+                    }
+
+                    /*GameObject street = Instantiate(street_empty, new Vector3(i, 0, j), Quaternion.identity);
+                    street.transform.parent = cityObject.transform;*/
                 }
                 else if (matrix[i][j] == 'D')
                 {
+                    
+                    float h = UnityEngine.Random.Range(1.0f,2.0f);
                     GameObject building = Instantiate(building_destination, new Vector3(i+.07f, 0, j+ .47f), Quaternion.identity);
+                    Vector3 scaling = new Vector3(1,h,1);
+                    building.transform.localScale = Vector3.Scale(building.transform.localScale, scaling);
                     building.transform.parent = cityObject.transform;
                 }
                 else if (matrix[i][j] == '#')
                 {
 
+                    
+                    float h = UnityEngine.Random.Range(1.0f,2.0f);
                     GameObject building = Instantiate(building_normal, new Vector3(i-0.48f, 0, j+0.22f), Quaternion.identity);
+                    Vector3 scaling = new Vector3(1,h,1);
+                    building.transform.localScale = Vector3.Scale(building.transform.localScale, scaling);
                     building.transform.parent = cityObject.transform;
                 }
                 else
