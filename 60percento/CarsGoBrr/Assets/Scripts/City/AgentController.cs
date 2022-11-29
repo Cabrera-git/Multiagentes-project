@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -13,7 +14,7 @@ public class CarData
     public string id;
     public float x, z;
     public int o;
-    public AgentData(string id, float x, float z, int o)
+    public CarData(string id, float x, float z, int o)
     {
         this.id = id;
         this.x = x;
@@ -37,7 +38,7 @@ public class LightData
     public string id;
     public float x, z;
     public int state;
-    public AgentData(string id, float x, float z, int state)
+    public LightData(string id, float x, float z, int state)
     {
         this.id = id;
         this.x = x;
@@ -66,21 +67,24 @@ public class City
 
 public class AgentController : MonoBehaviour
 {
-    string serverUrl = "http://localhost:8522";
+    string serverUrl = "http://localhost:8521";
     string getAgentsEndpoint = "/games";
     string getCityEndpoint = "/city";
     string sendConfigEndpoint = "/init";
 
     Dictionary<string, GameObject> agents;
+    List<List<char>> matrix;
 
     CarsData carsData;
     LightsData lightsData;
     City city;
 
     public GameObject carPrefab, lightPrefab, cityObject,
-            street_straight, street_innercorner, 
-            street_outercorner, street_cross,
-            building;
+            street_straight, street_empty, 
+            street_leftturn, street_rightturn,
+            building_normal, building_destination,
+            lightpost_left, lightpost_right;
+    public int cars, time;
 
     void Start()
     {
@@ -88,36 +92,102 @@ public class AgentController : MonoBehaviour
         carsData = new CarsData();
         lightsData = new LightsData();
         city = new City();
+        matrix = new List<List<char>>();
 
-        timer = timeToUpdate;
+        CityGen();
 
         StartCoroutine(SendConfiguration());
     }
 
     private void Update()
     {
-        boxes_ids = daddy.transform.GetComponentsInChildren<Transform>(true);
-        all_boxes = GameObject.FindGameObjectsWithTag("Box");
-        if (timer < 0)
-        {
-            timer = timeToUpdate;
-            updated = false;
-            StartCoroutine(UpdateSimulation());
+
+    }
+
+    private void CityGen()
+    {
+        foreach (string line in System.IO.File.ReadLines(@"./../MesaModels60/base.txt"))
+        {  
+            List<char> lst = new List<char>();
+            lst = line.ToCharArray().ToList();                       
+            matrix.Add(lst);
         }
-
-        if (updated)
+        for (int i = 0; i < matrix.Count; i++)
         {
-            timer -= Time.deltaTime;
-            dt = 1.0f - (timer / timeToUpdate);
-
-            foreach (var agent in currPositions)
+            for (int j = 0; j < matrix[i].Count; j++)
             {
-                Vector3 currentPosition = agent.Value;
-                Vector3 previousPosition = prevPositions[agent.Key];
-                Vector3 interpolated = Vector3.Lerp(previousPosition, currentPosition, dt);
-                Vector3 direction = currentPosition - interpolated;
-                agents[agent.Key].transform.localPosition = interpolated;
-                if (direction != Vector3.zero) agents[agent.Key].transform.rotation = Quaternion.LookRotation(new Vector3(-direction.x, direction.y, -direction.z));
+                if (matrix[i][j] == '<' || matrix[i][j] == '>' || matrix[i][j] == 'v' || matrix[i][j] == '^')
+                {
+                    GameObject street;
+                    if (matrix[i][j] == '<' || matrix[i][j] == '>')
+                        street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.Euler(new Vector3(0, -90, 0)));
+                    else
+                        street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.identity);
+                    street.transform.parent = cityObject.transform;
+                }
+                else if (matrix[i][j] == 'Û' || matrix[i][j] == 'Ǔ' || matrix[i][j] == 'ù' || matrix[i][j] == 'ú')
+                {
+                    GameObject street = Instantiate(street_empty, new Vector3(i, 0, j), Quaternion.identity);
+                    street.transform.parent = cityObject.transform;
+
+                    GameObject light = Instantiate(lightpost_left, new Vector3(i, 1.5f, j), Quaternion.Euler(new Vector3(180, 0, 0)));
+                }
+                else if (matrix[i][j] == '⋝' || matrix[i][j] == '≤' || matrix[i][j] == '≥' || matrix[i][j] == '⋜')
+                {
+                    GameObject street;
+
+                    if(i == 0 || i == 1 || i == 24 || i == 25)
+                    {
+                        if(j != 1 || j != 24)
+                        {
+                            street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.Euler(new Vector3(0, -90, 0)));
+                            street.transform.parent = cityObject.transform;
+                        }
+                        else
+                        {
+                            street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.identity);
+                            street.transform.parent = cityObject.transform;
+                        }
+                    }
+                    else if(j == 0 || j == 1 || j == 24 || j == 25)
+                    {
+                        if(i != 1 || i != 24)
+                        {
+                            street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.identity);
+                            street.transform.parent = cityObject.transform;
+                        }
+                        else
+                        {
+                            street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.Euler(new Vector3(0, -90, 0)));
+                            street.transform.parent = cityObject.transform;
+                        }
+                    }
+                    else
+                    {
+                        street = Instantiate(street_empty, new Vector3(i, 0, j), Quaternion.identity);
+                        street.transform.parent = cityObject.transform;
+                    }
+                }
+                else if (matrix[i][j] == 'D')
+                {                    
+                    float h = UnityEngine.Random.Range(1.0f,2.0f);
+                    GameObject building = Instantiate(building_destination, new Vector3(i+.07f, 0, j+ .47f), Quaternion.identity);
+                    Vector3 scaling = new Vector3(1,h,1);
+                    building.transform.localScale = Vector3.Scale(building.transform.localScale, scaling);
+                    building.transform.parent = cityObject.transform;
+                }
+                else if (matrix[i][j] == '#')
+                {                    
+                    float h = UnityEngine.Random.Range(1.0f,2.0f);
+                    GameObject building = Instantiate(building_normal, new Vector3(i-0.48f, 0, j+0.22f), Quaternion.identity);
+                    Vector3 scaling = new Vector3(1,h,1);
+                    building.transform.localScale = Vector3.Scale(building.transform.localScale, scaling);
+                    building.transform.parent = cityObject.transform;
+                }
+                else
+                {
+                    Debug.Log("Welp");
+                }
             }
         }
     }
@@ -136,7 +206,14 @@ public class AgentController : MonoBehaviour
 
     IEnumerator SendConfiguration()
     {
+        WWWForm form = new WWWForm();
+
+        form.AddField("cars", cars.ToString());
+        form.AddField("timeLimit", time.ToString());
+
         UnityWebRequest www = UnityWebRequest.Get(serverUrl + sendConfigEndpoint);
+        www.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
         yield return www.SendWebRequest();
         if (www.result != UnityWebRequest.Result.Success)
         {
@@ -144,11 +221,10 @@ public class AgentController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Satrted city model!");
+            Debug.Log("Started city model!");
             Debug.Log("Getting Agents positions");
             StartCoroutine(GetAgentsData());
             Debug.Log("Getting City layout");
-            StartCoroutine(GetCityData());
         }
     }
 
@@ -163,127 +239,6 @@ public class AgentController : MonoBehaviour
         {
             carsData = JsonUtility.FromJson<CarsData>(www.downloadHandler.text);
             lightsData = JsonUtility.FromJson<LightsData>(www.downloadHandler.text);
-
-            foreach (var car in carsData.cars)
-            {
-                if (!agents.ContainsKey(car.id))
-                {
-                    GameObject agent = Instantiate(carPrefab, new Vector3(car.x, 0, car.z), Quaternion.identity);
-                    agents.Add(car.id, agent);
-                }
-                else
-                {
-                    agents[car.id].transform.localPosition = new Vector3(car.x, 0, car.z);
-                }
-            }
-
-            foreach (var light in lightsData.status)
-            {
-                if (!agents.ContainsKey(light.id))
-                {
-                    GameObject agent = Instantiate(lightPrefab, new Vector3(light.x, 2, light.z), Quaternion.identity);
-                    agents.Add(light.id, agent);
-                }
-                else
-                {
-                    // add light change using 'light.status' parameter
-                }
-            }
-        }
-    }
-
-    IEnumerator GetCityData()
-    {
-        UnityWebRequest www = UnityWebRequest.Get(serverUrl + getCityEndpoint);
-        yield return www.SendWebRequest();
-
-        if (www.result != UnityWebRequest.Result.Success)
-            Debug.Log(www.error);
-        else
-        {
-            city = JsonUtility.FromJson<City>(www.downloadHandler.text);
-            Debug.Log("City layout received!");
-
-            int x = 0, z;
-
-            foreach (var row in city.city) // each x
-            {
-                z = 0;
-
-                foreach (var cell in row) // each z
-                {
-                    if((x == 0 && z == 0) || (x == 15 && z == 0) || (x == 0 && z == 15) || (x == 15 && z == 15))
-                    {
-                        GameObject street = Instantiate(street_outercorner, new Vector3(x, 0, z), Quaternion.identity);
-                        street.transform.parent = cityObject.transform;
-                        z++;
-                        break;
-                    }
-                    if((x == 1 && z == 1) || (x == 14 && z == 1) || (x == 1 && z == 14) || (x == 14 && z == 14))
-                    {
-                        GameObject street = Instantiate(street_innercorner, new Vector3(x, 0, z), Quaternion.identity);
-                        street.transform.parent = cityObject.transform;
-                        z++;
-                        break;
-                    }
-                    if (cell == 1)
-                    {
-                        GameObject street = Instantiate(street_straight, new Vector3(x, 0, z), Quaternion.identity);
-                        street.transform.parent = cityObject.transform;
-                        z++;
-                    }
-                    if (cell == 2)
-                    {
-                        GameObject street = Instantiate(street_straight, new Vector3(x, 0, z), Quaternion.identity);
-                        street.transform.parent = cityObject.transform;
-                        z++;
-                    }
-                    if (cell == 3)
-                    {
-                        GameObject street = Instantiate(street_straight, new Vector3(x, 0, z), Quaternion.identity);
-                        street.transform.parent = cityObject.transform;
-                        z++;
-                    }
-                    if (cell == 4)
-                    {
-                        GameObject street = Instantiate(street_straight, new Vector3(x, 0, z), Quaternion.identity);
-                        street.transform.parent = cityObject.transform;
-                        z++;
-                    }
-                    if (cell == 5)
-                    {
-                        GameObject street = Instantiate(street_cross, new Vector3(x, 0, z), Quaternion.identity);
-                        street.transform.parent = cityObject.transform;
-                        z++;
-                    }
-                    if (cell == 6)
-                    {
-                        GameObject street = Instantiate(street_cross, new Vector3(x, 0, z), Quaternion.identity);
-                        street.transform.parent = cityObject.transform;
-                        z++;
-                    }
-                    if (cell == 7)
-                    {
-                        GameObject street = Instantiate(street_cross, new Vector3(x, 0, z), Quaternion.identity);
-                        street.transform.parent = cityObject.transform;
-                        z++;
-                    }
-                    if (cell == 8)
-                    {
-                        GameObject street = Instantiate(street_cross, new Vector3(x, 0, z), Quaternion.identity);
-                        street.transform.parent = cityObject.transform;
-                        z++;
-                    }
-                    else
-                    {
-                        GameObject streetn_t = Instantiate(building, new Vector3(x, 0, z), Quaternion.identity);
-                        streetn_t.transform.parent = cityObject.transform;
-                        z++;
-                    }
-                }
-
-                x++;
-            }
         }
     }
 }
