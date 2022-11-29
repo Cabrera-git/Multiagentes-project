@@ -46,12 +46,12 @@ height = 0
 
 basePath = Path("layouts/base2.txt")
 
-with open(basePath) as baseFile: 
+with open(basePath,encoding='utf8') as baseFile: 
     lines = baseFile.readlines()
     width = len(lines[0])-1
     height = len(lines)
 
-model_params = {"N": 20}
+model_params = {"N": 1}
 
 grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
 

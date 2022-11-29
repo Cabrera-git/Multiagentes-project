@@ -32,6 +32,7 @@ class Car(Agent):
         """
         super().__init__(unique_id, model)
         self.is_parked = False
+        self.arrived = False
         self.destination = destination
         self.directionLight = (0, 0)
         self.curr_index = 1
@@ -52,9 +53,15 @@ class Car(Agent):
         """ 
         Determines if the agent can move in the direction indicated by its route
         """
-        # Check if car has arrived to destination
+        # Check if car is at the destination
+        if self.pos == self.destination:
+            self.arrived = True
+            return
+        
+        # Check if car is around the destination and move to it
         if self.destination in self.model.grid.get_neighborhood(self.pos, moore=False, include_center=False):
             self.model.grid.move_agent(self, self.destination)
+            self.pos = self.destination
             self.is_parked = True
             return
 
@@ -140,9 +147,6 @@ class Car(Agent):
         """ 
         Determines the new direction it will take
         """
-        # Only moves if it isn't parked
-        if self.is_parked:
-            return
         self.move()
     
     def advance(self):

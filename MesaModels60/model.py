@@ -16,14 +16,14 @@ class City(Model):
     """
     def __init__(self, N):
 
-        dataDictionary = json.load(open(Path("layouts/mapDictionary.json"))) # Change Path
+        dataDictionary = json.load(open(Path("layouts/mapDictionary.json")),encoding='utf8') # Change Path
 
-        destinations = []
+        self.destinations = []
         maze = []
 
         basePath = Path("layouts/base2.txt")
 
-        with open(basePath) as baseFile: # Change Path
+        with open(basePath,encoding='utf8') as baseFile: # Change Path
             lines = baseFile.readlines()
             self.width = len(lines[0])-1
             self.height = len(lines)
@@ -49,33 +49,13 @@ class City(Model):
                     elif col == "D":
                         agent = Destination(f"d{r*self.width+c}", self)
                         self.grid.place_agent(agent, (c, self.height - r - 1))
-                        destinations.append((c, self.height - r - 1))
+                        self.destinations.append((c, self.height - r - 1))
                         self.schedule.add(agent)
 
-        a_star = AStar(maze)
-        # Add cars with their destinations
-        for i in range(N):
-            cell_type = None
-            x = 0
-            y = 0
-            # Place car in road and where there aren't other cars
-            while not isinstance(cell_type, Road) or len(self.grid[x][y]) > 1:
-                x = self.random.randint(0, self.width-1)
-                y = self.random.randint(0, self.height-1)
-                cell_type = self.grid[x][y][0]
-            
-            fate = self.random.choice(destinations)
-            route = a_star.search(1, (x,y), fate)
-            if route == None:
-                print("No route found")
-                continue
+        # Set spawn points at the corners of the grid
+        self.spawns = [(0, self.height - 1), (self.width - 1, 0)]
 
-            agent = Car(f"c{i}", self, fate, route)
-            self.grid.place_agent(agent, (x,y))
-            self.schedule.add(agent)
-            agent.assignDirection()
-            print(f"Car {i} assigned to {fate}")
-           
+        self.a_star = AStar(maze)   
 
         self.running = True 
 
@@ -94,6 +74,24 @@ class City(Model):
                     else:
                         agent.state = "Red"
 
+        cars_in_model = sum([1 if isinstance(test_agent, Car) else 0 for test_agent in self.schedule.agents])
+        # Spawn a car, unless there are more than num_agents
+        if cars_in_model < self.num_agents:
+            spawn_point = self.random.choice(self.spawns)
+            # Check if there is a car at the spawn point
+            cars_in_spawn = sum([1 if isinstance(test_agent, Car) else 0 for test_agent in self.grid.get_cell_list_contents(spawn_point)])
+            if cars_in_spawn == 0:
+                fate = self.random.choice(self.destinations)
+                route = self.a_star.search(1, spawn_point, fate)
+                if route == None:
+                    print(f"No route found when going to {fate}")
+                
+                agent = Car(f"c{self.schedule.steps}", self, fate, route)
+                self.grid.place_agent(agent, spawn_point)
+                self.schedule.add(agent)
+                agent.assignDirection()
+                print(f"Car {self.schedule.steps} assigned to {fate}")
+
         # Change green lights to yellow
         elif self.schedule.steps % 10 == 8:
             for agent in self.schedule.agents:
@@ -101,11 +99,6 @@ class City(Model):
                     if agent.state == "Green":
                         agent.state = "Yellow"
         
-        # Stop model when all cars are parked
-        count = 0
-        for agent in self.schedule.agents:
-            if isinstance(agent, Car) and not agent.is_parked:
-                count += 1
-        
-        if count == 0:
+        # Stop model when 500 steps are reached
+        if self.schedule.steps >= 500:
             self.running = False
