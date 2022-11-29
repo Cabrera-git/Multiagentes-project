@@ -18,7 +18,7 @@ Imagina una solución que implemente una de las siguientes estrategias de ejempl
 - Coches: Los coches interactúan con otros agentes de su tipo simulando el tráfico que puede surgir en una ciudad, con base en ello pueden decidir entre esperar o tomar una ruta alternativa para llegar al destino que requieren. También son capaces de interactuar con los semáforos, y dependiendo del activo de este agente deciden entre frenar o seguir dentro de una intersección. Con los obstáculos interactúan similar como si fuera un coche, pero estos son estáticos.
 - Semáforos: Estos agentes deciden si dejar el flujo de los agentes del tipo coche dentro de una celda, y exclusivamente interactúan con ellos. 
 - Obstáculos: Los obstáculos son agentes estáticos, los cuales se fijan en cierta posición para impedir el paso de los agentes del tipo coche.
-Destino: Otro agente estático que funge como objetivo de llegada para los agentes del tipo coche. 
+Destino: Otro agente estático que funge como objetivo de llegada para los agentes del tipo coche.  
 
 
 ## Link al documento final
