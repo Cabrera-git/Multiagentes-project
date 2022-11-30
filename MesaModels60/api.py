@@ -32,11 +32,14 @@ def cars():
             return jsonify({"error": "Model is not initialized. Initialize and try again"})
         carsData = [
             {
+                "id": agent.unique_id,
                 "x": agent.pos[0], 
-                "z": agent.pos[1], 
+                "z": agent.pos[1],
+                "dx": agent.destination[0], 
+                "dz": agent.destination[1], 
                 "directionLight": agent.directionLight, 
                 "isParked": agent.is_parked, 
-                "arrived": agent.arrived
+                "arrived": agent.arrived,
 
             } for agent in city.schedule.agents if isinstance(agent, Car)
         ]
@@ -49,7 +52,15 @@ def trafficLights():
     if request.method == 'GET':
         if city == None:
             return jsonify({"error": "Model is not initialized. Initialize and try again"})
-        trafficLightsStates = [{"x": agent.pos[0], "y": agent.pos[1], "state": agent.state, "direction": agent.directions} for agent in city.schedule.agents if isinstance(agent, Traffic_Light)]
+        trafficLightsStates = [
+            {
+                "id": agent.unique_id,
+                "x": agent.pos[0], 
+                "z": agent.pos[1], 
+                "state": agent.state, 
+                
+            } for agent in city.schedule.agents if isinstance(agent, Traffic_Light)
+        ]
         return jsonify({"trafficLights": trafficLightsStates})
 
 # Obtener actualizaciones del modelo
@@ -62,6 +73,13 @@ def update():
         city.step()
         currentStep += 1
         return str(city.running)
+
+# Obtener estadísticas finales
+@app.route('/finalstats', methods = ['GET'])
+def finalStats():
+    global city
+    if request.method == 'GET':
+        return "Hola aqui aun faltan las estadísticas."
 
 if __name__ == "__main__":
     app.run(host="localhost", port=PORT, debug=True)

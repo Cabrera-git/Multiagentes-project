@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -366,7 +366,7 @@ MonoBehaviour:
   - {fileID: 919132149155446097, guid: 284f4c662b4d45c4683227a6c2236851, type: 3}
   - {fileID: 919132149155446097, guid: d932af3db65a7524bab94d94a34512d0, type: 3}
   - {fileID: 919132149155446097, guid: 803bc23981b4c6745ba5cdf2005ebf49, type: 3}
-  timeToUpdate: 0.1
+  timeToUpdate: 0.2
   carPrefab: {fileID: 0}
   lightPrefab: {fileID: 0}
   street_straight: {fileID: 1573730805894322, guid: 2224b63330275e5478ef024b2913f937, type: 3}

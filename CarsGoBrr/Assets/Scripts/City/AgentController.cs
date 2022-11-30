@@ -13,14 +13,16 @@ using UnityEngine.UI;
 public class CarData
 {
     public string id;
-    public float x, z;
+    public float x, z, dx, dz;
     public int directionLight;
     public bool isParked, arrived;
-    public CarData(string id, float x, float z, int directionLight, bool isParked, bool arrived)
+    public CarData(string id, float x, float z, float dx, float dz, int directionLight, bool isParked, bool arrived)
     {
         this.id = id;
         this.x = x;
         this.z = z;
+        this.dx = dx;
+        this.dz = dz;
         this.directionLight = directionLight;
         this.isParked = isParked;
         this.arrived = arrived;
@@ -75,7 +77,6 @@ public class AgentController : MonoBehaviour
 {
     string serverUrl = "http://localhost:8585";
     string getAgentsEndpoint = "/cars";
-    string getCityEndpoint = "/city";
     string sendConfigEndpoint = "/init";
     string sendUpdateEndpoint = "/update";
     string getLightsEndpoint = "/trafficlights";
@@ -87,7 +88,7 @@ public class AgentController : MonoBehaviour
     CarsData carsData;
     LightsData trafficLightsStates;
     City city;
-    public float timeToUpdate = 0.5f;
+    public float timeToUpdate;
     private float timer, dt;
     private bool updated = false, updatedL = false;
 
@@ -132,27 +133,52 @@ public class AgentController : MonoBehaviour
 
             foreach(CarData broom in carsData.cars)
             {
-                agents[broom.id].transform.position = Vector3.Lerp(agents[broom.id].transform.position, new Vector3(broom.x, 0, broom.z), 0.4f);
+                agents[broom.id].transform.position = Vector3.Lerp(agents[broom.id].transform.position, new Vector3(broom.x, 0, broom.z), 0.7f);
+
+                if(broom.x == broom.dx && broom.z == broom.dz)
+                {
+                    if(agents[broom.id].transform.position.x == broom.x + 1 && agents[broom.id].transform.position.z == broom.z) // [1,0]
+                    {
+                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, -90, 0), 0.7f);
+                        continue;
+                    }
+                    else if(agents[broom.id].transform.position.x == broom.x - 1 && agents[broom.id].transform.position.z == broom.z) // [-1,0]
+                    {
+                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 90, 0), 0.7f);
+                        continue;
+                    }
+                    else if(agents[broom.id].transform.position.x == broom.x && agents[broom.id].transform.position.z == broom.z + 1) // [0,1]
+                    {
+                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 0, 0), 0.7f);
+                        continue;
+                    }
+                    else if(agents[broom.id].transform.position.x == broom.x && agents[broom.id].transform.position.z == broom.z - 1) // [0,-1]
+                    {
+                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 180, 0), 0.7f);
+                        continue;
+                    }
+                }
 
                 place = matrix[(int)broom.x][(int)broom.z];
 
                 if(place == 'v' || place == 'Ǔ')
                 {
-                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 90, 0), 0.4f);
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 90, 0), 0.7f);
                 }
                 else if(place == '^' || place == 'Û')
                 {
-                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, -90, 0), 0.4f);
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, -90, 0), 0.7f);
                 }
                 else if(place == '<' || place == 'ù')
                 {
-                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 180, 0), 0.4f);
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 180, 0), 0.7f);
                 }
                 else if(place == '>' || place == 'ú')
                 {
-                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 0, 0), 0.4f);
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 0, 0), 0.7f);
                 }
             }
+            
             foreach(LightData light in trafficLightsStates.trafficLights)
             {
                 if(light.state == "Green")
@@ -176,6 +202,7 @@ public class AgentController : MonoBehaviour
             lst = line.ToCharArray().ToList();                       
             matrix.Add(lst);
         }
+        
         for (int i = 0; i < matrix.Count; i++)
         {
             for (int j = 0; j < matrix[i].Count; j++)
@@ -184,40 +211,15 @@ public class AgentController : MonoBehaviour
                 {
                     GameObject street;
                     if (matrix[i][j] == '<' || matrix[i][j] == '>')
-                        street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.Euler(new Vector3(0, -90, 0)));
+                        street = Instantiate(street_straight, new Vector3(j, 0, matrix.Count - 1 - i), Quaternion.identity);
                     else
-                        street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.identity);
+                        street = Instantiate(street_straight, new Vector3(j, 0, matrix.Count - 1 - i), Quaternion.Euler(new Vector3(0, -90, 0)));
                     street.transform.parent = cityObject.transform;
                 }
                 else if (matrix[i][j] == 'Û' || matrix[i][j] == 'Ǔ' || matrix[i][j] == 'ù' || matrix[i][j] == 'ú')
                 {
-                    GameObject street = Instantiate(street_empty, new Vector3(i, 0, j), Quaternion.identity);
+                    GameObject street = Instantiate(street_empty, new Vector3(j, 0, matrix.Count - 1 - i), Quaternion.identity);
                     street.transform.parent = cityObject.transform;
-                
-                    GameObject light = Instantiate(lightpost, new Vector3(i, 1.5f, j), Quaternion.Euler(new Vector3(180, 0, 0)));
-                    light.transform.parent = lightObject.transform;
-                    light.tag = "LightP";
-
-                    char place;
-                    place = matrix[i][j];
-
-                    if(place == 'Ǔ')
-                    {
-                        light.transform.rotation = Quaternion.Euler(180, 90, 0);
-                        
-                    }
-                    else if(place == 'Û')
-                    {
-                        light.transform.rotation = Quaternion.Euler(180, -90, 0);
-                    }
-                    else if(place == 'ù')
-                    {
-                        light.transform.rotation = Quaternion.Euler(0, 0, 180);
-                    }
-                    else if(place == 'ú')
-                    {
-                        light.transform.rotation = Quaternion.Euler(0, 180, 180);
-                    }
                 }
                 else if (matrix[i][j] == '⋝' || matrix[i][j] == '≤' || matrix[i][j] == '≥' || matrix[i][j] == '⋜')
                 {
@@ -227,12 +229,12 @@ public class AgentController : MonoBehaviour
                     {
                         if(j != 1 || j != 24)
                         {
-                            street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.Euler(new Vector3(0, -90, 0)));
+                            street = Instantiate(street_straight, new Vector3(j, 0, matrix.Count - 1 - i), Quaternion.identity);
                             street.transform.parent = cityObject.transform;
                         }
                         else
                         {
-                            street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.identity);
+                            street = Instantiate(street_straight, new Vector3(j, 0, matrix.Count - 1 - i), Quaternion.Euler(new Vector3(0, -90, 0)));
                             street.transform.parent = cityObject.transform;
                         }
                     }
@@ -240,25 +242,25 @@ public class AgentController : MonoBehaviour
                     {
                         if(i != 1 || i != 24)
                         {
-                            street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.identity);
+                            street = Instantiate(street_straight, new Vector3(j, 0, matrix.Count - 1 - i), Quaternion.Euler(new Vector3(0, -90, 0)));
                             street.transform.parent = cityObject.transform;
                         }
                         else
                         {
-                            street = Instantiate(street_straight, new Vector3(i, 0, j), Quaternion.Euler(new Vector3(0, -90, 0)));
+                            street = Instantiate(street_straight, new Vector3(j, 0, matrix.Count - 1 - i), Quaternion.identity);
                             street.transform.parent = cityObject.transform;
                         }
                     }
                     else
                     {
-                        street = Instantiate(street_empty, new Vector3(i, 0, j), Quaternion.identity);
+                        street = Instantiate(street_empty, new Vector3(j, 0, matrix.Count - 1 - i), Quaternion.identity);
                         street.transform.parent = cityObject.transform;
                     }
                 }
                 else if (matrix[i][j] == 'D')
                 {                    
                     float h = UnityEngine.Random.Range(1.0f,2.0f);
-                    GameObject building = Instantiate(building_destination, new Vector3(i+.07f, 0, j+ .47f), Quaternion.identity);
+                    GameObject building = Instantiate(building_destination, new Vector3(j+.07f, 0, matrix.Count - 1 - i + .47f), Quaternion.identity);
                     Vector3 scaling = new Vector3(1,h,1);
                     building.transform.localScale = Vector3.Scale(building.transform.localScale, scaling);
                     building.transform.parent = cityObject.transform;
@@ -266,7 +268,7 @@ public class AgentController : MonoBehaviour
                 else if (matrix[i][j] == '#')
                 {                    
                     float h = UnityEngine.Random.Range(1.0f,2.0f);
-                    GameObject building = Instantiate(building_normal, new Vector3(i-0.48f, 0, j+0.22f), Quaternion.identity);
+                    GameObject building = Instantiate(building_normal, new Vector3(j-0.48f, 0, matrix.Count - 1 - i + 0.22f), Quaternion.identity);
                     Vector3 scaling = new Vector3(1,h,1);
                     building.transform.localScale = Vector3.Scale(building.transform.localScale, scaling);
                     building.transform.parent = cityObject.transform;
@@ -328,7 +330,6 @@ public class AgentController : MonoBehaviour
         {
             trafficLightsStates = JsonUtility.FromJson<LightsData>(www.downloadHandler.text);
             addLightAgents();
-            Debug.Log("Lights updated");
             updatedL = true;
         }
 
@@ -340,8 +341,30 @@ public class AgentController : MonoBehaviour
         {          
             if (!agents.ContainsKey(trafficLightsStates.trafficLights[i].id))
             {
-                GameObject light = FindClosestTrafficLight(trafficLightsStates.trafficLights[i].x, 0, trafficLightsStates.trafficLights[i].z);
+                GameObject light = Instantiate(lightpost, new Vector3(trafficLightsStates.trafficLights[i].x, 1.5f, trafficLightsStates.trafficLights[i].z), Quaternion.Euler(new Vector3(180, 0, 0)));
                 agents.Add(trafficLightsStates.trafficLights[i].id, light);
+                light.transform.parent = lightObject.transform;
+                light.tag = "LightP";
+
+                char place;
+                place = matrix[(int)trafficLightsStates.trafficLights[i].x][(int)trafficLightsStates.trafficLights[i].z];
+
+                if(place == 'Ǔ')
+                {
+                    light.transform.rotation = Quaternion.Euler(180, 90, 0);                        
+                }
+                else if(place == 'Û')
+                {
+                    light.transform.rotation = Quaternion.Euler(180, -90, 0);
+                }
+                else if(place == 'ù')
+                {
+                    light.transform.rotation = Quaternion.Euler(0, 0, 180);
+                }
+                else if(place == 'ú')
+                {
+                    light.transform.rotation = Quaternion.Euler(0, 180, 180);
+                }
             }
         }
     }
@@ -379,6 +402,7 @@ public class AgentController : MonoBehaviour
             }
         }
     }
+
     public GameObject FindClosestTrafficLight(float x,float y,float z)
     {
         GameObject[] gos;
