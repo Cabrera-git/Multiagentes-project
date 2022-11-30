@@ -293,14 +293,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 570182014}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.60876137, y: 0, z: 0, w: 0.7933534}
+  m_LocalPosition: {x: 4, y: 25, z: 12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 75, y: 0, z: 0}
 --- !u!1 &762205504
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,8 +375,7 @@ MonoBehaviour:
   street_rightturn: {fileID: 1116869472028106, guid: 8e333c3d9aca5ec419b24e89d083d1e0, type: 3}
   building_normal: {fileID: 1212380520111254, guid: 562df8355904213468a690c4ce6740b6, type: 3}
   building_destination: {fileID: 1378370071209536, guid: a60988b24f8ff094ba511054edf48a9d, type: 3}
-  lightpost_left: {fileID: 1751516578131854, guid: 334aad2b5d3ce18449f0aac7e90fe56e, type: 3}
-  lightpost_right: {fileID: 1187787657081942, guid: d7cdfd713e1c02c49b7eb072ff0c50b2, type: 3}
+  lightpost: {fileID: 1751516578131854, guid: 334aad2b5d3ce18449f0aac7e90fe56e, type: 3}
   carsObject: {fileID: 1799566192}
   cityObject: {fileID: 2054035769}
   lightObject: {fileID: 762205504}

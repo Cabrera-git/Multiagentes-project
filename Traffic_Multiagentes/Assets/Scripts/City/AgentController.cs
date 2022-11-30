@@ -91,7 +91,7 @@ public class AgentController : MonoBehaviour
             street_straight, street_empty, 
             street_leftturn, street_rightturn,
             building_normal, building_destination,
-            lightpost_left, lightpost_right,
+            lightpost,
             carsObject, cityObject, lightObject;
     public int cars, time;
 
@@ -178,8 +178,28 @@ public class AgentController : MonoBehaviour
                     GameObject street = Instantiate(street_empty, new Vector3(i, 0, j), Quaternion.identity);
                     street.transform.parent = cityObject.transform;
 
-                    GameObject light = Instantiate(lightpost_left, new Vector3(i, 1.5f, j), Quaternion.Euler(new Vector3(180, 0, 0)));
+                    GameObject light = Instantiate(lightpost, new Vector3(i, 1.5f, j), Quaternion.Euler(new Vector3(180, 0, 0)));
                     light.transform.parent = lightObject.transform;
+
+                    char place;
+                    place = matrix[i][j];
+
+                    if(place == 'Ǔ')
+                    {
+                        light.transform.rotation = Quaternion.Euler(180, 90, 0);
+                    }
+                    else if(place == 'Û')
+                    {
+                        light.transform.rotation = Quaternion.Euler(180, -90, 0);
+                    }
+                    else if(place == 'ù')
+                    {
+                        light.transform.rotation = Quaternion.Euler(0, 0, 180);
+                    }
+                    else if(place == 'ú')
+                    {
+                        light.transform.rotation = Quaternion.Euler(0, 180, 180);
+                    }
                 }
                 else if (matrix[i][j] == '⋝' || matrix[i][j] == '≤' || matrix[i][j] == '≥' || matrix[i][j] == '⋜')
                 {
