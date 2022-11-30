@@ -37,6 +37,7 @@ def cars():
                 "z": agent.pos[1], 
                 "directionLight": agent.directionLight, 
                 "isParked": agent.is_parked, 
+                "arrived": agent.arrived
 
             } for agent in city.schedule.agents if isinstance(agent, Car)
         ]
@@ -52,7 +53,7 @@ def trafficLights():
         trafficLightsStates = [
             {
                 "x": agent.pos[0], 
-                "y": agent.pos[1], 
+                "z": agent.pos[1], 
                 "state": agent.state, 
                 "direction": agent.directions
                 

@@ -84,6 +84,9 @@ public class AgentController : MonoBehaviour
     CarsData carsData;
     LightsData lightsData;
     City city;
+    public float timeToUpdate = 0.5f;
+    private float timer, dt;
+    private bool updated = false;
 
     public GameObject carPrefab, lightPrefab,
             street_straight, street_empty, 
@@ -100,6 +103,7 @@ public class AgentController : MonoBehaviour
         lightsData = new LightsData();
         city = new City();
         matrix = new List<List<char>>();
+        timer = timeToUpdate;
 
         Debug.Log("Getting City layout");
         CityGen();
@@ -109,7 +113,23 @@ public class AgentController : MonoBehaviour
 
     private void Update()
     {
-        StartCoroutine(UpdateSimulation());
+        if(timer < 0)
+        {
+            timer = timeToUpdate;
+            updated = false;
+            StartCoroutine(UpdateSimulation());
+
+        }
+        if(updated)
+        {            
+            foreach(CarData broom in carsData.cars)
+            {
+                timer -= Time.deltaTime;
+                dt = 1.0f - (timer / timeToUpdate);
+
+                agents[broom.id].transform.position = Vector3.Lerp(agents[broom.id].transform.position, new Vector3(broom.x, 0, broom.z), 0.5f);
+            }
+        }
     }
 
     private void CityGen()
@@ -226,7 +246,7 @@ public class AgentController : MonoBehaviour
 
     IEnumerator UpdateSimulation()
     {
-        UnityWebRequest www = UnityWebRequest.Get(serverUrl + getUpdateEndpoint);
+        UnityWebRequest www = UnityWebRequest.Get(serverUrl + sendUpdateEndpoint);
         yield return www.SendWebRequest();
         if (www.result != UnityWebRequest.Result.Success)
             Debug.Log(www.error);
@@ -247,6 +267,7 @@ public class AgentController : MonoBehaviour
         {
             carsData = JsonUtility.FromJson<CarsData>(www.downloadHandler.text);
             GenerateCars();
+            updated = true;
         }
     }
     
@@ -256,7 +277,7 @@ public class AgentController : MonoBehaviour
         {          
             if (!agents.ContainsKey(carsData.cars[i].id))
             {
-                GameObject car = Instantiate(carModels[UnityEngine.Random.Range(0, 4)], new Vector3(cData.cars[i].x, 0, cData.cars[i].z), Quaternion.identity);
+                GameObject car = Instantiate(carModels[UnityEngine.Random.Range(0, 4)], new Vector3(carsData.cars[i].x, 0, carsData.cars[i].z), Quaternion.identity);
                 agents.Add(carsData.cars[i].id, car);
                 car.transform.parent = carsObject.transform;
                 car.tag = "Car";

@@ -44,7 +44,7 @@ def agent_portrayal(agent):
 width = 0
 height = 0
 
-basePath = Path("layouts/base2.txt")
+basePath = Path("./layouts/base2.txt")
 
 with open(basePath,encoding='utf8') as baseFile: 
     lines = baseFile.readlines()

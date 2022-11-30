@@ -32,6 +32,7 @@ class Car(Agent):
         """
         super().__init__(unique_id, model)
         self.is_parked = False
+        self.arrived = False
         self.destination = destination
         self.directionLight = (0, 0)
         self.curr_index = 1
