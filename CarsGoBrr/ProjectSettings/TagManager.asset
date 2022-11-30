@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Car
+  - LightP
   layers:
   - Default
   - TransparentFX

@@ -52,10 +52,10 @@ def trafficLights():
             return jsonify({"error": "Model is not initialized. Initialize and try again"})
         trafficLightsStates = [
             {
+                "id": agent.unique_id,
                 "x": agent.pos[0], 
                 "z": agent.pos[1], 
                 "state": agent.state, 
-                "direction": agent.directions
                 
             } for agent in city.schedule.agents if isinstance(agent, Traffic_Light)
         ]

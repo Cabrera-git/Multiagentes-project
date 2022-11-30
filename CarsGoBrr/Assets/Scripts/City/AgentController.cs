@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -38,11 +39,13 @@ public class CarsData
 [Serializable]
 public class LightData
 {
+    public string id;
     public float x, z;
     public string state;
     public int direction;
-    public LightData(float x, float z, string state, int direction)
+    public LightData(string id, float x, float z, string state, int direction)
     {
+        this.id = id;
         this.x = x;
         this.z = z;
         this.state = state;
@@ -53,8 +56,8 @@ public class LightData
 [Serializable]
 public class LightsData
 {
-    public List<LightData> status;
-    public LightsData() => this.status = new List<LightData>();
+    public List<LightData> trafficLights;
+    public LightsData() => this.trafficLights = new List<LightData>();
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -75,17 +78,18 @@ public class AgentController : MonoBehaviour
     string getCityEndpoint = "/city";
     string sendConfigEndpoint = "/init";
     string sendUpdateEndpoint = "/update";
+    string getLightsEndpoint = "/trafficlights";
 
     Dictionary<string, GameObject> agents;
     public List<GameObject> carModels;
     List<List<char>> matrix;
 
     CarsData carsData;
-    LightsData lightsData;
+    LightsData trafficLightsStates;
     City city;
     public float timeToUpdate = 0.5f;
     private float timer, dt;
-    private bool updated = false;
+    private bool updated = false, updatedL = false;
 
     public GameObject carPrefab, lightPrefab,
             street_straight, street_empty, 
@@ -99,7 +103,7 @@ public class AgentController : MonoBehaviour
     {
         agents = new Dictionary<string, GameObject>();
         carsData = new CarsData();
-        lightsData = new LightsData();
+        trafficLightsStates = new LightsData();
         city = new City();
         matrix = new List<List<char>>();
         timer = timeToUpdate;
@@ -119,7 +123,7 @@ public class AgentController : MonoBehaviour
             StartCoroutine(UpdateSimulation());
 
         }
-        if(updated)
+        if(updated && updatedL)
         {            
             timer -= Time.deltaTime;
             dt = 1.0f - (timer / timeToUpdate);
@@ -149,6 +153,18 @@ public class AgentController : MonoBehaviour
                     agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 0, 0), 0.4f);
                 }
             }
+            foreach(LightData light in trafficLightsStates.trafficLights)
+            {
+                if(light.state == "Green")
+                {
+                    agents[light.id].transform.GetChild(1).GetComponent<Light>().color = Color.green;
+                }
+                else if(light.state == "Red")
+                {
+                    agents[light.id].transform.GetChild(1).GetComponent<Light>().color = Color.red;
+                }
+            }
+
         }
     }
 
@@ -177,9 +193,10 @@ public class AgentController : MonoBehaviour
                 {
                     GameObject street = Instantiate(street_empty, new Vector3(i, 0, j), Quaternion.identity);
                     street.transform.parent = cityObject.transform;
-
+                
                     GameObject light = Instantiate(lightpost, new Vector3(i, 1.5f, j), Quaternion.Euler(new Vector3(180, 0, 0)));
                     light.transform.parent = lightObject.transform;
+                    light.tag = "LightP";
 
                     char place;
                     place = matrix[i][j];
@@ -187,6 +204,7 @@ public class AgentController : MonoBehaviour
                     if(place == 'Ǔ')
                     {
                         light.transform.rotation = Quaternion.Euler(180, 90, 0);
+                        
                     }
                     else if(place == 'Û')
                     {
@@ -281,6 +299,8 @@ public class AgentController : MonoBehaviour
             Debug.Log("Started city model!");
             Debug.Log("Getting Agents positions");
             StartCoroutine(GetAgentsData());
+            Debug.Log("Getting Lights trafficLights");
+            StartCoroutine(GetLightsData());
         }
     }
 
@@ -293,6 +313,36 @@ public class AgentController : MonoBehaviour
         else
         {
             StartCoroutine(GetAgentsData());
+            StartCoroutine(GetLightsData());
+        }
+    }
+    
+    IEnumerator GetLightsData()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(serverUrl + getLightsEndpoint);
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+            Debug.Log(www.error);
+        else
+        {
+            trafficLightsStates = JsonUtility.FromJson<LightsData>(www.downloadHandler.text);
+            addLightAgents();
+            Debug.Log("Lights updated");
+            updatedL = true;
+        }
+
+    }
+
+    void addLightAgents()
+    {
+        for (int i = 0; i < trafficLightsStates.trafficLights.Count(); i++)
+        {          
+            if (!agents.ContainsKey(trafficLightsStates.trafficLights[i].id))
+            {
+                GameObject light = FindClosestTrafficLight(trafficLightsStates.trafficLights[i].x, 0, trafficLightsStates.trafficLights[i].z);
+                agents.Add(trafficLightsStates.trafficLights[i].id, light);
+            }
         }
     }
 
@@ -328,6 +378,25 @@ public class AgentController : MonoBehaviour
                 agents.Remove(carsData.cars[i].id);
             }
         }
+    }
+    public GameObject FindClosestTrafficLight(float x,float y,float z)
+    {
+        GameObject[] gos;
+        gos = GameObject.FindGameObjectsWithTag("LightP");
+        GameObject closest = null;
+        float distance = Mathf.Infinity;
+        Vector3 position = new Vector3(x,y,z);
+        foreach (GameObject go in gos)
+        {
+            Vector3 diff = go.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < distance)
+            {
+                closest = go;
+                distance = curDistance;
+            }
+        }
+        return closest;
     }
 }
 
