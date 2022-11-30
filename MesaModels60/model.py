@@ -16,14 +16,14 @@ class City(Model):
     """
     def __init__(self, N):
 
-        dataDictionary = json.load(open(Path("layouts/mapDictionary.json")),encoding='utf8') # Change Path
+        dataDictionary = json.load(open(Path("layouts/mapDictionary.json"))) # Change Path
 
         self.destinations = []
         maze = []
 
         basePath = Path("layouts/base2.txt")
 
-        with open(basePath,encoding='utf8') as baseFile: # Change Path
+        with open(basePath) as baseFile: # Change Path
             lines = baseFile.readlines()
             self.width = len(lines[0])-1
             self.height = len(lines)
@@ -53,11 +53,10 @@ class City(Model):
                         self.schedule.add(agent)
 
         # Set spawn points at the corners of the grid
-        self.spawns = [(0, self.height - 1), (self.width - 1, 0)]
-
+        self.spawns = [(0, self.height-2), (self.width - 1, 0)]
         self.a_star = AStar(maze)   
-
         self.running = True 
+        self.num_agents = N
 
     def step(self):
         '''Advance the model by one step.'''
@@ -75,22 +74,24 @@ class City(Model):
                         agent.state = "Red"
 
         cars_in_model = sum([1 if isinstance(test_agent, Car) else 0 for test_agent in self.schedule.agents])
+        cars = 0
         # Spawn a car, unless there are more than num_agents
         if cars_in_model < self.num_agents:
-            spawn_point = self.random.choice(self.spawns)
+            spawn_point = self.spawns[cars_in_model % 2]
             # Check if there is a car at the spawn point
             cars_in_spawn = sum([1 if isinstance(test_agent, Car) else 0 for test_agent in self.grid.get_cell_list_contents(spawn_point)])
             if cars_in_spawn == 0:
                 fate = self.random.choice(self.destinations)
-                route = self.a_star.search(1, spawn_point, fate)
+                route = self.a_star.search(3, spawn_point, fate)
                 if route == None:
                     print(f"No route found when going to {fate}")
-                
-                agent = Car(f"c{self.schedule.steps}", self, fate, route)
-                self.grid.place_agent(agent, spawn_point)
-                self.schedule.add(agent)
-                agent.assignDirection()
-                print(f"Car {self.schedule.steps} assigned to {fate}")
+                else:
+                    agent = Car(f"c{self.schedule.steps}", self, fate, route)
+                    self.grid.place_agent(agent, spawn_point)
+                    self.schedule.add(agent)
+                    agent.assignDirection()
+                    print(f"Car {self.schedule.steps} assigned to {fate}")
+                    cars += 1
 
         # Change green lights to yellow
         elif self.schedule.steps % 10 == 8:
