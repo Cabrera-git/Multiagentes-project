@@ -77,7 +77,6 @@ public class AgentController : MonoBehaviour
     string sendUpdateEndpoint = "/update";
 
     Dictionary<string, GameObject> agents;
-    
     public List<GameObject> carModels;
     List<List<char>> matrix;
 
@@ -122,12 +121,33 @@ public class AgentController : MonoBehaviour
         }
         if(updated)
         {            
+            timer -= Time.deltaTime;
+            dt = 1.0f - (timer / timeToUpdate);
+
+            char place;
+
             foreach(CarData broom in carsData.cars)
             {
-                timer -= Time.deltaTime;
-                dt = 1.0f - (timer / timeToUpdate);
+                agents[broom.id].transform.position = Vector3.Lerp(agents[broom.id].transform.position, new Vector3(broom.x, 0, broom.z), 0.4f);
 
-                agents[broom.id].transform.position = Vector3.Lerp(agents[broom.id].transform.position, new Vector3(broom.x, 0, broom.z), 0.5f);
+                place = matrix[(int)broom.x][(int)broom.z];
+
+                if(place == 'v' || place == 'Ǔ')
+                {
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 90, 0), 0.4f);
+                }
+                else if(place == '^' || place == 'Û')
+                {
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, -90, 0), 0.4f);
+                }
+                else if(place == '<' || place == 'ù')
+                {
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 180, 0), 0.4f);
+                }
+                else if(place == '>' || place == 'ú')
+                {
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 0, 0), 0.4f);
+                }
             }
         }
     }
