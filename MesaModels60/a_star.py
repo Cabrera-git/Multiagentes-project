@@ -49,6 +49,7 @@ class AStar:
             adjust_y = no_rows-1 - current.position[0]
             path.append((adjust_x, adjust_y))
             current = current.parent
+            print(path)
         # Return reversed path as we need to show from start to end path
 
         return path[::-1]
