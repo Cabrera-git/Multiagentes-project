@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17031594, g: 0.20277263, b: 0.2388369, a: 1}
+  m_IndirectSpecularColor: {r: 0.17031614, g: 0.202773, b: 0.23883742, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -464,7 +464,8 @@ MonoBehaviour:
   - {fileID: 919132149155446097, guid: 284f4c662b4d45c4683227a6c2236851, type: 3}
   - {fileID: 919132149155446097, guid: d932af3db65a7524bab94d94a34512d0, type: 3}
   - {fileID: 919132149155446097, guid: 803bc23981b4c6745ba5cdf2005ebf49, type: 3}
-  timeToUpdate: 0.2
+  timeToUpdate: 0.01
+  currentCars: 0
   carPrefab: {fileID: 0}
   lightPrefab: {fileID: 0}
   street_straight: {fileID: 1573730805894322, guid: 2224b63330275e5478ef024b2913f937, type: 3}
@@ -477,7 +478,7 @@ MonoBehaviour:
   carsObject: {fileID: 1799566192}
   cityObject: {fileID: 2054035769}
   lightObject: {fileID: 762205504}
-  cars: 50
+  cars: 1000
   time: 100
 --- !u!4 &1534266360
 Transform:

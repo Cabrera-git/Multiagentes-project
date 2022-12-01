@@ -89,7 +89,7 @@ public class AgentController : MonoBehaviour
     private float timer, dt;
     private bool updated = false, updatedL = false;
     public Dictionary<string, float[]> carPositions;
-
+    public int currentCars;
     public GameObject carPrefab, lightPrefab,
             street_straight, street_empty, 
             street_leftturn, street_rightturn,
@@ -209,6 +209,10 @@ public class AgentController : MonoBehaviour
                 else if(light.state == "Red")
                 {
                     agents[light.id].transform.GetChild(1).GetComponent<Light>().color = Color.red;
+                }
+                else if(light.state == "Yellow")
+                {
+                    agents[light.id].transform.GetChild(1).GetComponent<Light>().color = Color.yellow;
                 }
             }
 
@@ -447,6 +451,7 @@ public class AgentController : MonoBehaviour
         {          
             if (!agents.ContainsKey(carsData.cars[i].id))
             {
+                currentCars = carsData.cars.Count();
                 GameObject car = Instantiate(carModels[UnityEngine.Random.Range(0, 4)], new Vector3(carsData.cars[i].x, 0, carsData.cars[i].z), Quaternion.identity);
                 agents.Add(carsData.cars[i].id, car);
                 car.transform.parent = carsObject.transform;
