@@ -12,20 +12,15 @@ using UnityEngine.UI;
 [Serializable]
 public class CarData
 {
-    public string id;
-    public float x, z, dx, dz;
-    public int directionLight1;
-    public int directionLight2;
+    public string id, direction;
+    public float x, z;
     public bool isParked, arrived;
-    public CarData(string id, float x, float z, float dx, float dz, int directionLight1, int directionLight2, bool isParked, bool arrived)
+    public CarData(string id, float x, float z, string direction, bool isParked, bool arrived)
     {
         this.id = id;
         this.x = x;
         this.z = z;
-        this.dx = dx;
-        this.dz = dz;
-        this.directionLight1 = directionLight1;
-        this.directionLight2 = directionLight2;
+        this.direction = direction;
         this.isParked = isParked;
         this.arrived = arrived;
     }
@@ -134,18 +129,22 @@ public class AgentController : MonoBehaviour
             foreach(CarData broom in carsData.cars)
             {
                 agents[broom.id].transform.position = Vector3.Lerp(agents[broom.id].transform.position, new Vector3(broom.x, 0, broom.z), 0.7f);
-                Debug.Log(broom.directionLight1 + " " + broom.directionLight2);
-                if(broom.directionLight1 == 0 && broom.directionLight2 == 0)
+
+                if(broom.direction == "Up")
                 {
-                    continue;
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0,0,0), 0.7f);
                 }
-                else if(broom.directionLight1 == 0 && broom.directionLight2 == 1)
+                else if(broom.direction == "Down")
                 {
-                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(agents[broom.id].transform.rotation.x, agents[broom.id].transform.rotation.y + 90, agents[broom.id].transform.rotation.z), 0.7f);
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0,180,0), 0.7f);
                 }
-                else if(broom.directionLight1 == 1 && broom.directionLight2 == 0)
+                else if(broom.direction == "Left")
                 {
-                     agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(agents[broom.id].transform.rotation.x, agents[broom.id].transform.rotation.y - 90, agents[broom.id].transform.rotation.z), 0.7f);
+                     agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0,-90,0), 0.7f);
+                }
+                else if(broom.direction == "Right")
+                {
+                     agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0,90,0), 0.7f);
                 }
 
                 
