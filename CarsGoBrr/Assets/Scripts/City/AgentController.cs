@@ -14,16 +14,18 @@ public class CarData
 {
     public string id;
     public float x, z, dx, dz;
-    public int directionLight;
+    public int directionLight1;
+    public int directionLight2;
     public bool isParked, arrived;
-    public CarData(string id, float x, float z, float dx, float dz, int directionLight, bool isParked, bool arrived)
+    public CarData(string id, float x, float z, float dx, float dz, int directionLight1, int directionLight2, bool isParked, bool arrived)
     {
         this.id = id;
         this.x = x;
         this.z = z;
         this.dx = dx;
         this.dz = dz;
-        this.directionLight = directionLight;
+        this.directionLight1 = directionLight1;
+        this.directionLight2 = directionLight2;
         this.isParked = isParked;
         this.arrived = arrived;
     }
@@ -91,6 +93,7 @@ public class AgentController : MonoBehaviour
     public float timeToUpdate;
     private float timer, dt;
     private bool updated = false, updatedL = false;
+    public Dictionary<string, float[]> carPositions;
 
     public GameObject carPrefab, lightPrefab,
             street_straight, street_empty, 
@@ -108,7 +111,7 @@ public class AgentController : MonoBehaviour
         city = new City();
         matrix = new List<List<char>>();
         timer = timeToUpdate;
-
+        carPositions = new Dictionary<string, float[]>();
         Debug.Log("Getting City layout");
         CityGen();
 
@@ -127,35 +130,48 @@ public class AgentController : MonoBehaviour
         {            
             timer -= Time.deltaTime;
             dt = 1.0f - (timer / timeToUpdate);
-
             GenerateCars();
-
-            char place;
-
             foreach(CarData broom in carsData.cars)
             {
                 agents[broom.id].transform.position = Vector3.Lerp(agents[broom.id].transform.position, new Vector3(broom.x, 0, broom.z), 0.7f);
+                Debug.Log(broom.directionLight1 + " " + broom.directionLight2);
+                if(broom.directionLight1 == 0 && broom.directionLight2 == 0)
+                {
+                    continue;
+                }
+                else if(broom.directionLight1 == 0 && broom.directionLight2 == 1)
+                {
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(agents[broom.id].transform.rotation.x, agents[broom.id].transform.rotation.y + 90, agents[broom.id].transform.rotation.z), 0.7f);
+                }
+                else if(broom.directionLight1 == 1 && broom.directionLight2 == 0)
+                {
+                     agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(agents[broom.id].transform.rotation.x, agents[broom.id].transform.rotation.y - 90, agents[broom.id].transform.rotation.z), 0.7f);
+                }
 
+                
+                
+              
+                /*
                 if(broom.x == broom.dx && broom.z == broom.dz)
                 {
                     if(agents[broom.id].transform.position.x == broom.x + 1 && agents[broom.id].transform.position.z == broom.z) // [1,0]
                     {
-                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, -90, 0), 0.7f);
+                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 90, 0), 0.7f);
                         continue;
                     }
                     else if(agents[broom.id].transform.position.x == broom.x - 1 && agents[broom.id].transform.position.z == broom.z) // [-1,0]
                     {
-                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 90, 0), 0.7f);
+                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, -90, 0), 0.7f);
                         continue;
                     }
                     else if(agents[broom.id].transform.position.x == broom.x && agents[broom.id].transform.position.z == broom.z + 1) // [0,1]
                     {
-                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 0, 0), 0.7f);
+                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 180, 0), 0.7f);
                         continue;
                     }
                     else if(agents[broom.id].transform.position.x == broom.x && agents[broom.id].transform.position.z == broom.z - 1) // [0,-1]
                     {
-                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 180, 0), 0.7f);
+                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 0, 0), 0.7f);
                         continue;
                     }
                 }
@@ -164,20 +180,25 @@ public class AgentController : MonoBehaviour
 
                 if(place == 'v' || place == 'Ǔ')
                 {
-                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 90, 0), 0.7f);
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 0, 0), 0.7f);
                 }
                 else if(place == '^' || place == 'Û')
                 {
-                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, -90, 0), 0.7f);
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 180, 0), 0.7f);
                 }
                 else if(place == '<' || place == 'ù')
                 {
-                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 180, 0), 0.7f);
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 90, 0), 0.7f);
                 }
                 else if(place == '>' || place == 'ú')
                 {
-                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, 0, 0), 0.7f);
+                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0, -90, 0), 0.7f);
                 }
+                else
+                {
+                    agents[broom.id].transform.rotation = agents[broom.id].transform.rotation;
+                }
+                */
             }
             
             foreach(LightData light in trafficLightsStates.trafficLights)

@@ -37,7 +37,8 @@ def cars():
                 "z": agent.pos[1],
                 "dx": agent.destination[0], 
                 "dz": agent.destination[1], 
-                "directionLight": agent.directionLight, 
+                "directionLight1": agent.directionLight[0], 
+                "directionLight2": agent.directionLight[1],
                 "isParked": agent.is_parked, 
                 "arrived": agent.arrived,
 
