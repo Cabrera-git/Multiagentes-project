@@ -83,7 +83,7 @@ class City(Model):
             cars_in_spawn = sum([1 if isinstance(test_agent, Car) else 0 for test_agent in self.grid.get_cell_list_contents(spawn_point)])
             if cars_in_spawn == 0:
                 fate = self.random.choice(self.destinations)
-                route = self.a_star.search(3, spawn_point, fate)
+                route = self.a_star.search(1, spawn_point, fate)
                 if route == None:
                     print(f"No route found when going to {fate}")
                 else:
