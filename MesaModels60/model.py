@@ -52,6 +52,8 @@ class City(Model):
                         self.destinations.append((c, self.height - r - 1))
                         self.schedule.add(agent)
 
+            print(maze)
+
         # Set spawn points at the corners of the grid
         self.spawns = [(0, self.height-2), (self.width - 1, 0)]
         self.a_star = AStar(maze)   
