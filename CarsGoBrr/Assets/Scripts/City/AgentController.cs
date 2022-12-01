@@ -197,7 +197,7 @@ public class AgentController : MonoBehaviour
 
     private void CityGen()
     {
-        foreach (string line in System.IO.File.ReadLines(@"./../MesaModels60/layouts/base.txt"))
+        foreach (string line in System.IO.File.ReadLines(@"./../MesaModels60/layouts/base2.txt"))
         {  
             List<char> lst = new List<char>();
             lst = line.ToCharArray().ToList();                       
@@ -381,7 +381,7 @@ public class AgentController : MonoBehaviour
                 agents.Add(trafficLightsStates.trafficLights[i].id, light);
                 light.transform.parent = lightObject.transform;
                 light.tag = "LightP";
-
+/*
                 char place;
                 place = matrix[(int)trafficLightsStates.trafficLights[i].x][(int)trafficLightsStates.trafficLights[i].z];
 
@@ -401,6 +401,7 @@ public class AgentController : MonoBehaviour
                 {
                     light.transform.rotation = Quaternion.Euler(0, 180, 180);
                 }
+                */
             }
         }
     }
