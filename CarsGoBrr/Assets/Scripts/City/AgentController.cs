@@ -122,12 +122,13 @@ public class AgentController : MonoBehaviour
             timer = timeToUpdate;
             updated = false;
             StartCoroutine(UpdateSimulation());
-
         }
         if(updated && updatedL)
         {            
             timer -= Time.deltaTime;
             dt = 1.0f - (timer / timeToUpdate);
+
+            GenerateCars();
 
             char place;
 
@@ -429,11 +430,6 @@ public class AgentController : MonoBehaviour
                 agents.Add(carsData.cars[i].id, car);
                 car.transform.parent = carsObject.transform;
                 car.tag = "Car";
-            }
-            if (carsData.cars[i].arrived)
-            {
-                Destroy(agents[carsData.cars[i].id]);
-                agents.Remove(carsData.cars[i].id);
             }
         }
     }
