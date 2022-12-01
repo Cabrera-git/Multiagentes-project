@@ -23,5 +23,5 @@ Destino: Otro agente estático que funge como objetivo de llegada para los agent
 
 ## Link al documento final
 
-[Link](https://docs.google.com/document/d/1KUx-yMLLhpA7tczekrdXo6INNWtJhwlgHpVj2VaVSzg/edit?usp=sharing)
+[Proyecto Final](https://docs.google.com/document/d/1KUx-yMLLhpA7tczekrdXo6INNWtJhwlgHpVj2VaVSzg/edit?usp=sharing)
 
