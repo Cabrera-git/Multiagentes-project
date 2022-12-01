@@ -63,17 +63,6 @@ class City(Model):
         '''Advance the model by one step.'''
         self.schedule.step()
 
-        # Change stoplights every ten steps
-        if self.schedule.steps % 10 == 0:
-            for agent in self.schedule.agents:
-                if isinstance(agent, Traffic_Light):
-                    # Change reds to green
-                    if agent.state == "Red":
-                        agent.state = "Green"
-                    # Change yellows to red
-                    else:
-                        agent.state = "Red"
-
         cars_in_model = sum([1 if isinstance(test_agent, Car) else 0 for test_agent in self.schedule.agents])
         cars = 0
         # Spawn a car, unless there are more than num_agents
@@ -93,9 +82,20 @@ class City(Model):
                     agent.assignDirection()
                     print(f"Car {self.schedule.steps} assigned to {fate}")
                     cars += 1
+        
+        # Change stoplights every ten steps
+        if self.schedule.steps % 10 == 8:
+            for agent in self.schedule.agents:
+                if isinstance(agent, Traffic_Light):
+                    # Change reds to green
+                    if agent.state == "Red":
+                        agent.state = "Green"
+                    # Change yellows to red
+                    else:
+                        agent.state = "Red"
 
         # Change green lights to yellow
-        elif self.schedule.steps % 10 == 8:
+        elif self.schedule.steps % 8 == 0:
             for agent in self.schedule.agents:
                 if isinstance(agent, Traffic_Light):
                     if agent.state == "Green":
