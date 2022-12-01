@@ -77,7 +77,7 @@ class City(Model):
         cars_in_model = sum([1 if isinstance(test_agent, Car) else 0 for test_agent in self.schedule.agents])
         cars = 0
         # Spawn a car, unless there are more than num_agents
-        if cars_in_model < self.num_agents:
+        if cars_in_model < self.num_agents and self.schedule.steps % 2 == 0:
             spawn_point = self.spawns[cars_in_model % 2]
             # Check if there is a car at the spawn point
             cars_in_spawn = sum([1 if isinstance(test_agent, Car) else 0 for test_agent in self.grid.get_cell_list_contents(spawn_point)])
