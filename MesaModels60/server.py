@@ -51,7 +51,7 @@ with open(basePath,encoding='utf-8') as baseFile:
     width = len(lines[0])-1
     height = len(lines)
 
-model_params = {"N": 50}
+model_params = {"N": 100}
 
 grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
 
