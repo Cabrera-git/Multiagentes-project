@@ -4,6 +4,7 @@ https://github.com/BaijayantaRoy/Medium-Article/blob/master/A_Star.ipynb
 """
 import numpy as np
 
+
 class Node:
     """
         A node class for A* Pathfinding
@@ -21,8 +22,10 @@ class Node:
         self.g = 0
         self.h = 0
         self.f = 0
+
     def __eq__(self, other):
         return self.position == other.position
+
 
 class AStar:
     """
@@ -34,12 +37,11 @@ class AStar:
     def __init__(self, maze):
         self.maze = maze
 
-
     def return_path(self, current_node):
         """
         This function returns the path of the search
         """
-        
+
         path = []
         no_rows = len(self.maze)
 
@@ -53,7 +55,6 @@ class AStar:
         # Return reversed path as we need to show from start to end path
 
         return path[::-1]
-
 
     def search(self, cost, start, end):
         """
@@ -74,40 +75,39 @@ class AStar:
         end_node.g = end_node.h = end_node.f = 0
 
         # Initialize both yet_to_visit and visited list
-        # in this list we will put all node that are yet_to_visit for exploration. 
+        # in this list we will put all node that are yet_to_visit for exploration.
         # From here we will find the lowest cost node to expand next
-        yet_to_visit_list = []  
+        yet_to_visit_list = []
         # in this list we will put all node those already explored so that we don't explore it again
-        visited_list = [] 
-        
+        visited_list = []
+
         # Add the start node
         yet_to_visit_list.append(start_node)
-        
-        # Adding a stop condition. This is to avoid any infinite loop and stop 
+
+        # Adding a stop condition. This is to avoid any infinite loop and stop
         # execution after some reasonable number of steps
         outer_iterations = 0
         max_iterations = (len(self.maze) // 2) ** 10
 
         # what squares do we search. depends on what the maze template tells us
         movements = {
-            ">" : [[ 0, 1 ]],   # go right
-            "<" : [[ 0, -1]],   # go left
-            "v" : [[ 1, 0 ]],   # go down
-            "^" : [[-1, 0 ]],   # go up
-            "≤" : [[ 0, -1], 
-                [ 1, 0 ]],   # go left and down
-            "⋜" : [[ 0, -1], 
-                [-1, 0 ]],   # go left and up
-            "≥" : [[ 0, 1 ], 
-                [ 1, 0 ]],   # go right and down
-            "⋝" : [[ 0, 1 ], 
-                [-1, 0 ]],   # go right and up 
-            "ú" : [[ 0, 1 ]],   # go right 
-            "ù" : [[ 0, -1]],   # go left
-            "Û" : [[-1, 0 ]],   # go up
-            "Ǔ" : [[ 1, 0 ]]    # go down
+            ">": [[0, 1]],   # go right
+            "<": [[0, -1]],   # go left
+            "v": [[1, 0]],  #  go down
+            "^": [[-1, 0]],  #  go up
+            "≤": [[0, -1],
+                  [1, 0]],  #  go left and down
+            "⋜": [[0, -1],
+                  [-1, 0]],   # go left and up
+            "≥": [[0, 1],
+                  [1, 0]],  #  go right and down
+            "⋝": [[0, 1],
+                  [-1, 0]],   # go right and up
+            "ú": [[0, 1]],   # go right
+            "ù": [[0, -1]],  #  go left
+            "Û": [[-1, 0]],  #  go up
+            "Ǔ": [[1, 0]]  #  go down
         }
-
 
         """
             1) We first get the current node by comparing all f cost and selecting the lowest cost node for further expansion
@@ -126,15 +126,15 @@ class AStar:
                     c) if child in yet_to_visit list then ignore it
                     d) else move the child to yet_to_visit list
         """
-        #find maze has got how many rows and columns 
-        no_rows, no_columns = np.shape(np.array(self.maze))
-        
+        # find maze has got how many rows and columns
+        no_rows, no_columns = [len(self.maze), len(self.maze[0])]
+
         # Loop until you find the end
-        
+
         while len(yet_to_visit_list) > 0:
 
             # Every time any node is referred from yet_to_visit list, counter of limit operation incremented
-            outer_iterations += 1     
+            outer_iterations += 1
 
             # Get the current node
             current_node = yet_to_visit_list[0]
@@ -143,11 +143,11 @@ class AStar:
                 if item.f < current_node.f:
                     current_node = item
                     current_index = index
-                    
-            # if we hit this point return the path such as it may be no solution or 
+
+            # if we hit this point return the path such as it may be no solution or
             # computation cost is too high
             if outer_iterations > max_iterations:
-                print ("giving up on pathfinding too many iterations")
+                print("giving up on pathfinding too many iterations")
                 return self.return_path(current_node)
 
             # Pop current node out off yet_to_visit list, add to visited list
@@ -156,25 +156,27 @@ class AStar:
 
             # test if goal is reached or not, if yes then return the path
             # if current_node == end_node:
-            if (((current_node.position[0] - end_node.position[0]) ** 2) + 
-                ((current_node.position[1] - end_node.position[1]) ** 2)) == 1:
+            if (((current_node.position[0] - end_node.position[0]) ** 2) +
+                    ((current_node.position[1] - end_node.position[1]) ** 2)) == 1:
                 return self.return_path(current_node)
 
             # Generate children from all adjacent squares
             children = []
 
-            move = movements[self.maze[current_node.position[0]][current_node.position[1]]]
+            move = movements[self.maze[current_node.position[0]]
+                             [current_node.position[1]]]
 
-            for new_position in move: 
+            for new_position in move:
 
                 # Get node position
-                node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
+                node_position = (
+                    current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
 
                 # Make sure within range (check if within maze boundary)
-                if (node_position[0] > (no_rows - 1) or 
-                    node_position[0] < 0 or 
-                    node_position[1] > (no_columns -1) or 
-                    node_position[1] < 0):
+                if (node_position[0] > (no_rows - 1) or
+                    node_position[0] < 0 or
+                    node_position[1] > (no_columns - 1) or
+                        node_position[1] < 0):
                     continue
 
                 # Make sure walkable terrain
@@ -189,7 +191,7 @@ class AStar:
 
             # Loop through children
             for child in children:
-                
+
                 # Child is on the visited list (search entire visited list)
                 if len([visited_child for visited_child in visited_list if visited_child == child]) > 0:
                     continue
@@ -197,7 +199,7 @@ class AStar:
                 # Create the f, g, and h values
                 child.g = current_node.g + cost
                 # Heuristic costs calculated here, this is using manhattan distance
-                child.h = (abs(child.position[0] - end_node.position[0]) + 
+                child.h = (abs(child.position[0] - end_node.position[0]) +
                            abs(child.position[1] - end_node.position[1]))
 
                 child.f = child.g + child.h
