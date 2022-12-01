@@ -218,7 +218,7 @@ public class AgentController : MonoBehaviour
                 }
                 else if (matrix[i][j] == 'Û' || matrix[i][j] == 'Ǔ' || matrix[i][j] == 'ù' || matrix[i][j] == 'ú')
                 {
-                    GameObject street = Instantiate(street_empty, new Vector3(j, 0, matrix.Count - 1 - i), Quaternion.identity);
+                    GameObject street = Instantiate(street_empty, new Vector3(j, -0.0231f, matrix.Count - 1 - i), Quaternion.identity);
                     street.transform.parent = cityObject.transform;
                 }
                 else if (matrix[i][j] == '⋝' || matrix[i][j] == '≤' || matrix[i][j] == '≥' || matrix[i][j] == '⋜')
@@ -253,23 +253,58 @@ public class AgentController : MonoBehaviour
                     }
                     else
                     {
-                        street = Instantiate(street_empty, new Vector3(j, 0, matrix.Count - 1 - i), Quaternion.identity);
+                        street = Instantiate(street_empty, new Vector3(j, -0.0231f, matrix.Count - 1 - i), Quaternion.identity);
                         street.transform.parent = cityObject.transform;
                     }
                 }
                 else if (matrix[i][j] == 'D')
                 {                    
-                    float h = UnityEngine.Random.Range(1.0f,2.0f);
-                    GameObject building = Instantiate(building_destination, new Vector3(j+.07f, 0, matrix.Count - 1 - i + .47f), Quaternion.identity);
-                    Vector3 scaling = new Vector3(1,h,1);
+                    float a = UnityEngine.Random.Range(1.0f,2.0f);
+                    GameObject building = Instantiate(building_destination, new Vector3(j, 0, matrix.Count - 1 - i), Quaternion.identity);
+                    Vector3 scaling = new Vector3(1,a,1);
                     building.transform.localScale = Vector3.Scale(building.transform.localScale, scaling);
                     building.transform.parent = cityObject.transform;
+
+                    char[] side = {matrix[i+1][j],matrix[i-1][j],matrix[i][j+1],matrix[i][j-1]};
+
+                    for(int h = 0; h < 4; h++)
+                    {
+                        if( side[h] == '⋝' || side[h] == '≤' || side[h] == '≥' || side[h] == '⋜' || 
+                            side[h] == 'Û' || side[h] == 'Ǔ' || side[h] == 'ù' || side[h] == 'ú' || 
+                            side[h] == '<' || side[h] == '>' || side[h] == 'v' || side[h] == '^')
+                        {
+                            if(h == 0)
+                            {
+                                building.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
+                                building.transform.position = new Vector3(building.transform.position.x - 0.1f, 0, building.transform.position.z - 0.47f);
+                                break;
+                            }
+                            else if(h == 1)
+                            {
+                                building.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                                building.transform.position = new Vector3(building.transform.position.x + 0.09f, 0, building.transform.position.z + 0.47f);
+                                break;
+                            }
+                            else if(h == 2)
+                            {
+                                building.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+                                building.transform.position = new Vector3(building.transform.position.x + 0.47f, 0, building.transform.position.z - 0.1f);
+                                break;
+                            }
+                            else if(h == 3)
+                            {
+                                building.transform.rotation = Quaternion.Euler(new Vector3(0, -90, 0));
+                                building.transform.position = new Vector3(building.transform.position.x - 0.47f, 0, building.transform.position.z + 0.1f);
+                                break;
+                            }
+                        }
+                    }
                 }
                 else if (matrix[i][j] == '#')
                 {                    
-                    float h = UnityEngine.Random.Range(1.0f,2.0f);
+                    float a = UnityEngine.Random.Range(1.0f,2.0f);
                     GameObject building = Instantiate(building_normal, new Vector3(j-0.48f, 0, matrix.Count - 1 - i + 0.22f), Quaternion.identity);
-                    Vector3 scaling = new Vector3(1,h,1);
+                    Vector3 scaling = new Vector3(1,a,1);
                     building.transform.localScale = Vector3.Scale(building.transform.localScale, scaling);
                     building.transform.parent = cityObject.transform;
                 }
@@ -403,6 +438,7 @@ public class AgentController : MonoBehaviour
         }
     }
 
+    /* 
     public GameObject FindClosestTrafficLight(float x,float y,float z)
     {
         GameObject[] gos;
@@ -421,7 +457,8 @@ public class AgentController : MonoBehaviour
             }
         }
         return closest;
-    }
+    } 
+    */
 }
 
 // ----------------------------------------------------------------------------------------------------
