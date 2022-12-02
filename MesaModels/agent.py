@@ -38,6 +38,7 @@ class Car(Agent):
         self.curr_index = 1
         self.route = route
         self.re_route = False
+        self.should_move = True
         try: 
             self.intention = self.route[1]
         except:
@@ -185,7 +186,7 @@ class Car(Agent):
                     agent_to_stop.should_move = False
                     break
         
-        if shouldMove:
+        if self.should_move:
             # Move to next cell and update direction
             self.model.grid.move_agent(self, self.intention)
             self.oldDirection = self.newDirection
