@@ -178,7 +178,7 @@ class Car(Agent):
                 # Prioritise the one going straight
                 if agent.oldDirection == agent.newDirection:
                     #  Self should NOT move 
-                    shouldMove = True
+                    shouldMove = False
                     break
         
         if shouldMove:
