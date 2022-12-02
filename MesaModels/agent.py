@@ -37,6 +37,7 @@ class Car(Agent):
         self.directionLight = (0, 0)
         self.curr_index = 1
         self.route = route
+        self.re_route = False
         try: 
             self.intention = self.route[1]
         except:
@@ -72,10 +73,20 @@ class Car(Agent):
             print(self.curr_index, len(self.route))
             print(self.pos)
 
+        # Recalculate the route if there are more than 3 cars in the current one and it wasnt recalculated last step
+        if len(self.route[self.curr_index:]) > 3 and not self.re_route:
+            if self.isObstacle(next_cell) and self.isObstacle(self.route[self.curr_index + 1]) and self.isObstacle(self.route[self.curr_index + 2]):
+                self.route = self.model.a_star.search(1, self.pos, self.destination)
+                self.curr_index = 1
+                self.re_route = True
+                return
+
         if not self.isObstacle(next_cell):
             self.intention = next_cell
             self.newDirection = self.calcDirection()
             self.curr_index += 1
+            # Do not take away re_route flag until the agent moves
+            self.re_route = False
         
         print('Estoy en '+str(self.pos)+' y voy a ' + str(self.destination)+' quiero ir a '+str(self.intention)+' vieja '+self.oldDirection+' nueva '+self.newDirection)
         # print(self.oldDirection, self.newDirection)
@@ -166,8 +177,8 @@ class Car(Agent):
             if isinstance(agent, Car) and agent.intention == self.intention and not agent.is_parked:
                 # Prioritise the one going straight
                 if agent.oldDirection == agent.newDirection:
-                    # Self should NOT move 
-                    shouldMove = False
+                    #  Self should NOT move 
+                    shouldMove = True
                     break
         
         if shouldMove:
