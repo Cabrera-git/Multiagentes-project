@@ -39,6 +39,7 @@ class Car(Agent):
         self.route = route
         self.re_route = False
         self.should_move = True
+        self.next_cell = (0, 0)
         try: 
             self.intention = self.route[1]
         except:
@@ -68,7 +69,11 @@ class Car(Agent):
             return
 
         try:
-            next_cell = self.route[self.curr_index]
+            self.next_cell = self.route[self.curr_index]
+            # Guarantee that next_cell will never be in the same position as the agent
+            if self.next_cell == self.pos:
+                self.curr_index += 1
+                self.next_cell = self.route[self.curr_index]
         except:
             print("ERROR: Could not continue on path.")
             print(f"Route: {self.route}")
@@ -77,14 +82,15 @@ class Car(Agent):
 
         # Recalculate the route if there are more than 3 cars in the current one and it wasnt recalculated last step
         if len(self.route[self.curr_index:]) > 3 and not self.re_route:
-            if self.isObstacle(next_cell) and self.isObstacle(self.route[self.curr_index + 1]) and self.isObstacle(self.route[self.curr_index + 2]):
+            if self.isObstacle(self.next_cell) and self.isObstacle(self.route[self.curr_index + 1]) and self.isObstacle(self.route[self.curr_index + 2]):
                 self.route = self.model.a_star.search(1, self.pos, self.destination)
                 self.curr_index = 1
                 self.re_route = True
                 return
 
-        if not self.isObstacle(next_cell):
-            self.intention = next_cell
+        if not self.isObstacle(self.next_cell):
+            self.intention = self.next_cell
+            print(f"Car at {self.pos} is not blocked")
             self.newDirection = self.calcDirection()
             self.curr_index += 1
             # Do not take away re_route flag until the agent moves
@@ -127,6 +133,19 @@ class Car(Agent):
                 else:
                     return True
         return False
+
+    def isCar(self, cell):
+        """
+        Returns true if given cell is a car
+        """
+        agents = self.model.grid[cell[0]][cell[1]]
+        for agent in agents:
+            if isinstance(agent, Car):
+                if agent.is_parked:
+                    return False
+                else:
+                    return True
+
     
     def turnOnBlinkers(self):
         """
@@ -195,7 +214,6 @@ class Car(Agent):
                     break
 
         if self.should_move:
-            print(f"Car at {self.pos} Should move to {self.intention}")
             # Move to next cell and update direction
             self.model.grid.move_agent(self, self.intention)
             self.oldDirection = self.newDirection
