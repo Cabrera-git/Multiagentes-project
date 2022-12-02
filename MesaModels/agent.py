@@ -70,7 +70,8 @@ class Car(Agent):
         try:
             next_cell = self.route[self.curr_index]
         except:
-            print(self.route)
+            print("ERROR: Could not continue on path.")
+            print(f"Route: {self.route}")
             print(self.curr_index, len(self.route))
             print(self.pos)
 
@@ -89,7 +90,7 @@ class Car(Agent):
             # Do not take away re_route flag until the agent moves
             self.re_route = False
         
-        print('Estoy en '+str(self.pos)+' y voy a ' + str(self.destination)+' quiero ir a '+str(self.intention)+' vieja '+self.oldDirection+' nueva '+self.newDirection)
+        # print('Estoy en '+str(self.pos)+' y voy a ' + str(self.destination)+' quiero ir a '+str(self.intention)+' vieja '+self.oldDirection+' nueva '+self.newDirection)
         # print(self.oldDirection, self.newDirection)
 
     def calcDirection(self):
@@ -180,13 +181,21 @@ class Car(Agent):
                 if agent.oldDirection == agent.newDirection and self.oldDirection != self.newDirection:
                     self.should_move = False
                     break
-                # If the other is going straight and we're going straight, choose one to move randomly
-                elif agent.oldDirection == agent.newDirection and self.oldDirection == self.newDirection:
-                    agent_to_stop = self.model.random.choice([self, agent])
-                    agent_to_stop.should_move = False
+                elif agent.oldDirection != agent.newDirection and self.oldDirection == self.newDirection:
+                    self.should_move = True
                     break
-        
+                # If the other is going straight and we're going straight, prioritise the one going vertical
+                elif agent.oldDirection == agent.newDirection and self.oldDirection == self.newDirection:
+                    if agent.newDirection == "Up" or agent.newDirection == "Down":
+                        agent.should_move == True
+                        self.should_move == False
+                    else:
+                        agent.should_move == False
+                        self.should_move == True
+                    break
+
         if self.should_move:
+            print(f"Car at {self.pos} Should move to {self.intention}")
             # Move to next cell and update direction
             self.model.grid.move_agent(self, self.intention)
             self.oldDirection = self.newDirection
