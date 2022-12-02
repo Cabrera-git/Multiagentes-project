@@ -16,6 +16,6 @@ Once that is done, you can run the model by running the following command:
 
 ```python api.py```
 
-This will open the server with the model, which will be initialized by running the Unity executable contained within the project's folder.
+This will open the server with the model, which can be visualized via Unity.
 
 You can now enjoy viewing the model in 3D!

@@ -401,7 +401,7 @@ public class AgentController : MonoBehaviour
         {          
             if (!agents.ContainsKey(trafficLightsStates.trafficLights[i].id))
             {
-                GameObject light = Instantiate(lightpost, new Vector3(trafficLightsStates.trafficLights[i].x, 1.5f, trafficLightsStates.trafficLights[i].z), Quaternion.Euler(new Vector3(180, 0, 0)));
+                GameObject light = Instantiate(lightpost, new Vector3(trafficLightsStates.trafficLights[i].x, 0, trafficLightsStates.trafficLights[i].z), Quaternion.identity);
                 agents.Add(trafficLightsStates.trafficLights[i].id, light);
                 light.transform.parent = lightObject.transform;
                 light.tag = "LightP";
