@@ -25,3 +25,6 @@ Destino: Otro agente estático que funge como objetivo de llegada para los agent
 
 [Proyecto Final](https://docs.google.com/document/d/1KUx-yMLLhpA7tczekrdXo6INNWtJhwlgHpVj2VaVSzg/edit?usp=sharing)
 
+## Archivos
+
+- Los archivos Finales se encuentran bajo las carpetas MesaModels (Modelo) y CarsGoBrr (Unity). Para inciar el modelo es necesario correr api.py en MesaModels.
