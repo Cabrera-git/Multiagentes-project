@@ -172,13 +172,17 @@ class Car(Agent):
         # Checks neighbour's intentions
         neighbors = self.model.grid.get_neighbors(self.pos, include_center=False, moore=True)
         diagonalNeighbors = filter(lambda agent: agent.pos[0] != self.pos[0] and agent.pos[1] != self.pos[1], neighbors)
-        shouldMove = True
+        self.should_move = True
         for agent in diagonalNeighbors:
             if isinstance(agent, Car) and agent.intention == self.intention and not agent.is_parked:
-                # Prioritise the one going straight
-                if agent.oldDirection == agent.newDirection:
-                    #  Self should NOT move 
-                    shouldMove = False
+                # If the other is going straight and we're not, prioritise the one going straight
+                if agent.oldDirection == agent.newDirection and self.oldDirection != self.newDirection:
+                    self.should_move = False
+                    break
+                # If the other is going straight and we're going straight, choose one to move randomly
+                elif agent.oldDirection == agent.newDirection and self.oldDirection == self.newDirection:
+                    agent_to_stop = self.model.random.choice([self, agent])
+                    agent_to_stop.should_move = False
                     break
         
         if shouldMove:
