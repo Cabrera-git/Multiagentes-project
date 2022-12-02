@@ -54,7 +54,7 @@ class City(Model):
 
 
         # Set spawn points at the corners of the grid
-        self.spawns = [(0, self.height-1), (self.width - 1, 0)]
+        self.spawns = [(0, self.height-1), (self.width - 1, 0), (0, 6), (self.width - 1, 14)]
         self.a_star = AStar(maze)   
         self.running = True 
         self.num_agents = N
@@ -66,8 +66,8 @@ class City(Model):
         cars_in_model = sum([1 if isinstance(test_agent, Car) else 0 for test_agent in self.schedule.agents])
         cars = 0
         # Spawn a car, unless there are more than num_agents
-        if cars_in_model < self.num_agents and self.schedule.steps % 2 == 0:
-            spawn_point = self.spawns[cars_in_model % 2]
+        if cars_in_model < self.num_agents and self.schedule.steps % 1 == 0:
+            spawn_point = self.spawns[cars_in_model % 4]
             # Check if there is a car at or around the spawn point
             cars_in_spawn = sum([1 if isinstance(test_agent, Car) else 0 for test_agent in self.grid.iter_neighbors(spawn_point, True, True, 1)])
             if cars_in_spawn == 0:

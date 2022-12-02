@@ -90,7 +90,6 @@ class Car(Agent):
 
         if not self.isObstacle(self.next_cell):
             self.intention = self.next_cell
-            print(f"Car at {self.pos} is not blocked")
             self.newDirection = self.calcDirection()
             self.curr_index += 1
             # Do not take away re_route flag until the agent moves
@@ -133,19 +132,6 @@ class Car(Agent):
                 else:
                     return True
         return False
-
-    def isCar(self, cell):
-        """
-        Returns true if given cell is a car
-        """
-        agents = self.model.grid[cell[0]][cell[1]]
-        for agent in agents:
-            if isinstance(agent, Car):
-                if agent.is_parked:
-                    return False
-                else:
-                    return True
-
     
     def turnOnBlinkers(self):
         """
@@ -180,6 +166,7 @@ class Car(Agent):
         Determines the new direction it will take
         """
         self.move()
+        self.advance()
     
     def advance(self):
         """
