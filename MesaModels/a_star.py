@@ -51,7 +51,6 @@ class AStar:
             adjust_y = no_rows-1 - current.position[0]
             path.append((adjust_x, adjust_y))
             current = current.parent
-            print(path)
         # Return reversed path as we need to show from start to end path
 
         return path[::-1]
@@ -147,7 +146,7 @@ class AStar:
             # if we hit this point return the path such as it may be no solution or
             # computation cost is too high
             if outer_iterations > max_iterations:
-                print("giving up on pathfinding too many iterations")
+                print("Giving up on pathfinding. Too many iterations")
                 return self.return_path(current_node)
 
             # Pop current node out off yet_to_visit list, add to visited list
