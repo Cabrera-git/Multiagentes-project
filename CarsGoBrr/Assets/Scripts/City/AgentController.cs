@@ -128,23 +128,32 @@ public class AgentController : MonoBehaviour
             GenerateCars();
             foreach(CarData broom in carsData.cars)
             {
-                agents[broom.id].transform.position = Vector3.Lerp(agents[broom.id].transform.position, new Vector3(broom.x, 0, broom.z), 0.7f);
+                if(agents[broom.id] != null)
+                {
+                    agents[broom.id].transform.position = Vector3.Lerp(agents[broom.id].transform.position, new Vector3(broom.x, 0, broom.z), 0.7f);
 
-                if(broom.direction == "Up")
-                {
-                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0,0,0), 0.7f);
+                    if(broom.direction == "Up")
+                    {
+                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0,0,0), 0.7f);
+                    }
+                    else if(broom.direction == "Down")
+                    {
+                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0,180,0), 0.7f);
+                    }
+                    else if(broom.direction == "Left")
+                    {
+                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0,-90,0), 0.7f);
+                    }
+                    else if(broom.direction == "Right")
+                    {
+                        agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0,90,0), 0.7f);
+                    }
                 }
-                else if(broom.direction == "Down")
+
+                if(broom.arrived)
                 {
-                    agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0,180,0), 0.7f);
-                }
-                else if(broom.direction == "Left")
-                {
-                     agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0,-90,0), 0.7f);
-                }
-                else if(broom.direction == "Right")
-                {
-                     agents[broom.id].transform.rotation = Quaternion.Lerp(agents[broom.id].transform.rotation, Quaternion.Euler(0,90,0), 0.7f);
+                    GameObject car = agents[broom.id];
+                    Destroy(car);
                 }
 
                 
@@ -405,27 +414,6 @@ public class AgentController : MonoBehaviour
                 agents.Add(trafficLightsStates.trafficLights[i].id, light);
                 light.transform.parent = lightObject.transform;
                 light.tag = "LightP";
-/*
-                char place;
-                place = matrix[(int)trafficLightsStates.trafficLights[i].x][(int)trafficLightsStates.trafficLights[i].z];
-
-                if(place == 'Ǔ')
-                {
-                    light.transform.rotation = Quaternion.Euler(180, 90, 0);                        
-                }
-                else if(place == 'Û')
-                {
-                    light.transform.rotation = Quaternion.Euler(180, -90, 0);
-                }
-                else if(place == 'ù')
-                {
-                    light.transform.rotation = Quaternion.Euler(0, 0, 180);
-                }
-                else if(place == 'ú')
-                {
-                    light.transform.rotation = Quaternion.Euler(0, 180, 180);
-                }
-                */
             }
         }
     }
