@@ -94,7 +94,7 @@ public class AgentController : MonoBehaviour
             street_straight, street_empty, 
             street_leftturn, street_rightturn,
             building_normal, building_destination,
-            lightpost,
+            lightpost, lightpost_rotation,
             carsObject, cityObject, lightObject;
     public int cars, time;
 
@@ -411,6 +411,7 @@ public class AgentController : MonoBehaviour
             if (!agents.ContainsKey(trafficLightsStates.trafficLights[i].id))
             {
                 GameObject light = Instantiate(lightpost, new Vector3(trafficLightsStates.trafficLights[i].x, 0, trafficLightsStates.trafficLights[i].z), Quaternion.identity);
+                GameObject light1 = Instantiate(lightpost_rotation, new Vector3(trafficLightsStates.trafficLights[i].x, 0, trafficLightsStates.trafficLights[i].z), Quaternion.Euler(0,180,0));
                 agents.Add(trafficLightsStates.trafficLights[i].id, light);
                 light.transform.parent = lightObject.transform;
                 light.tag = "LightP";

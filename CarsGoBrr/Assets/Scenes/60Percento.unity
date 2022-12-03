@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17031594, g: 0.20277263, b: 0.2388369, a: 1}
+  m_IndirectSpecularColor: {r: 0.17031614, g: 0.202773, b: 0.23883742, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -475,6 +475,7 @@ MonoBehaviour:
   building_normal: {fileID: 1212380520111254, guid: 562df8355904213468a690c4ce6740b6, type: 3}
   building_destination: {fileID: 1378370071209536, guid: a60988b24f8ff094ba511054edf48a9d, type: 3}
   lightpost: {fileID: 1751516578131854, guid: 334aad2b5d3ce18449f0aac7e90fe56e, type: 3}
+  lightpost_rotation: {fileID: 1751516578131854, guid: 524bf8394b5d8ff479d952e99da926a0, type: 3}
   carsObject: {fileID: 1799566192}
   cityObject: {fileID: 2054035769}
   lightObject: {fileID: 762205504}
